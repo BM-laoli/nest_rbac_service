@@ -1,11 +1,25 @@
 import {
+  Body,
+  ClassSerializerInterceptor,
   Controller,
   Get,
   HttpCode,
   HttpException,
   HttpStatus,
+  ParseArrayPipe,
+  Post,
+  Query,
+  SerializeOptions,
+  UseInterceptors,
+  UsePipes,
 } from '@nestjs/common';
 import { ZKService } from 'src/core/zk/zk.service';
+import { MysqlEntityClass } from 'src/decorators/MysqlEntityClass.decorator';
+import { TestDto } from 'src/dto/userInfo.dto';
+import { User_db2 } from 'src/entities/rbac_db_1/te2.entity';
+import { ClassSerializerMysqlInterceptor } from 'src/interceptor/classSerializerMysql.interceptor';
+import { VOTest } from 'src/vo/userInfo.vo';
+import { Serializer } from 'v8';
 import { TestService } from './test.service';
 
 @Controller('test')
@@ -41,5 +55,42 @@ export class TestController {
       },
       HttpStatus.FORBIDDEN,
     );
+  }
+
+  @Post('/t1')
+  async postT1(@Body() testDto: TestDto) {
+    console.log(testDto);
+    return testDto;
+  }
+
+  @Post('/t2')
+  createBulk(
+    @Body('items', new ParseArrayPipe({ items: TestDto }))
+    createUserDtos: TestDto[],
+
+    @Body('li', new ParseArrayPipe({ items: TestDto }))
+    createUserDtosLi: TestDto[],
+  ) {
+    return 'This action adds new users';
+  }
+
+  // 如果你需要手动处理 array 比如 GET /?ids=1,2,3
+  @Get('/t2')
+  findByIds(
+    @Query('ids', new ParseArrayPipe({ items: Number, separator: ',' }))
+    ids: number[],
+  ) {
+    return 'This action returns users by ids';
+  }
+
+  // 以上都是进入的现在是实际需要validation 出去的 需要 serialization
+  @Get('/t3')
+  @SerializeOptions({})
+  @MysqlEntityClass(VOTest)
+  @UseInterceptors(ClassSerializerMysqlInterceptor)
+  // async findT3(): Promise<Array<VOTest>> {
+  async findT3(): Promise<Array<VOTest>> {
+    const value = (await this.tsService.t3()) as any;
+    return value;
   }
 }

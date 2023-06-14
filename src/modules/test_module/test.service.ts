@@ -29,4 +29,8 @@ export class TestService {
   async t2(data: any) {
     return this.user_db2Repository.save(data);
   }
+
+  async t3() {
+    return this.user_db2Repository.find();
+  }
 }
