@@ -8,9 +8,18 @@ import { HttpReqTransformInterceptor } from './interceptor/httpReq.interceptor';
 import { ValidationPipe as OriginValidationPipe } from '@nestjs/common';
 import { ValidationPipe } from './pip/validation.pipe';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import rateLimit from 'express-rate-limit';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  // 安全 防御 (限流)
+  app.use(
+    rateLimit({
+      windowMs: 15 * 60 * 1000, // 15 minutes
+      max: 100, // limit each IP to 100 requests per windowMs
+    }),
+  );
 
   // Log
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
@@ -28,14 +37,7 @@ async function bootstrap() {
 
   // 全局统一返回体
   app.useGlobalInterceptors(new HttpReqTransformInterceptor());
-
-  // 全局使用 pip
-  // app.useGlobalPipes(
-  //   new ValidationPipe({
-  //     whitelist: true,
-  //   }),
-  // );
-
+  // validation
   app.useGlobalPipes(
     new OriginValidationPipe({
       transform: true,
