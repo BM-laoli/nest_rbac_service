@@ -7,9 +7,38 @@ import { ZKService } from './zk/zk.service';
 import { MysqlModule } from './mysql/mysql.module';
 import { InitConfig } from '../../conf/configuration';
 import { resolve } from 'path';
+import * as winston from 'winston';
+import {
+  utilities as nestWinstonModuleUtilities,
+  WinstonModule,
+} from 'nest-winston';
+import * as DailyRotateFile from 'winston-daily-rotate-file';
+
 @Global()
 @Module({
   imports: [
+    WinstonModule.forRoot({
+      transports: [
+        new winston.transports.Console({
+          format: winston.format.combine(
+            winston.format.timestamp(),
+            winston.format.ms(),
+            nestWinstonModuleUtilities.format.nestLike('RBAC_Service', {
+              colors: true,
+              prettyPrint: true,
+            }),
+          ),
+        }),
+        new DailyRotateFile({
+          filename: resolve(__dirname, '../../logs', 'application-%DATE%.log'),
+          dirname: 'logs',
+          datePattern: 'YYYY-MM-DD',
+          zippedArchive: true,
+          maxSize: '20m',
+          maxFiles: '14d',
+        }),
+      ],
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [InitConfig],

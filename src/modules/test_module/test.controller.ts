@@ -6,6 +6,9 @@ import {
   HttpCode,
   HttpException,
   HttpStatus,
+  Inject,
+  Logger,
+  LoggerService,
   ParseArrayPipe,
   Post,
   Query,
@@ -13,6 +16,7 @@ import {
   UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { ZKService } from 'src/core/zk/zk.service';
 import { MysqlEntityClass } from 'src/decorators/MysqlEntityClass.decorator';
 import { TestDto } from 'src/dto/userInfo.dto';
@@ -27,6 +31,8 @@ export class TestController {
   constructor(
     private readonly zkConfig: ZKService,
     private readonly tsService: TestService,
+    @Inject(WINSTON_MODULE_NEST_PROVIDER)
+    private readonly logger: LoggerService,
   ) {}
 
   @Get('/t1')
@@ -47,14 +53,15 @@ export class TestController {
     //   username: '2',
     // });
 
-    // throw new Error('error i have some error');
-    throw new HttpException(
-      {
-        status: HttpStatus.FORBIDDEN,
-        error: 'This is a custom message',
-      },
-      HttpStatus.FORBIDDEN,
-    );
+    this.logger.log('logger', TestController.name);
+    throw new Error('error i have some error');
+    // throw new HttpException(
+    //   {
+    //     status: HttpStatus.FORBIDDEN,
+    //     error: 'This is a custom message',
+    //   },
+    //   HttpStatus.FORBIDDEN,
+    // );
   }
 
   @Post('/t1')
