@@ -21,7 +21,9 @@ export class TestService {
   async t1(data: any) {
     console.log(data);
     // this.entityManager.save(User_db1, data);
-    return this.user_db1Repository.save(data);
+    throw new Error('error');
+
+    // return this.user_db1Repository.save(data);
   }
 
   async t2(data: any) {

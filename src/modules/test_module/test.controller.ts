@@ -1,4 +1,10 @@
-import { Controller, Get } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpCode,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { ZKService } from 'src/core/zk/zk.service';
 import { TestService } from './test.service';
 
@@ -23,12 +29,17 @@ export class TestController {
     //   email: '123',
     //   state: 0,
     // });
-    await this.tsService.t2({
-      username: '2',
-    });
+    // await this.tsService.t2({
+    //   username: '2',
+    // });
 
-    return {
-      config: value,
-    };
+    // throw new Error('error i have some error');
+    throw new HttpException(
+      {
+        status: HttpStatus.FORBIDDEN,
+        error: 'This is a custom message',
+      },
+      HttpStatus.FORBIDDEN,
+    );
   }
 }
