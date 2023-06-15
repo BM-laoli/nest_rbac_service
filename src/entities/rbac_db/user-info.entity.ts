@@ -36,6 +36,6 @@ export class UserInfo extends Base {
   })
   state: number;
 
-  @OneToMany(() => UserRole, (userRole) => userRole.users)
-  userRoles: UserInfo[];
+  @OneToMany(() => UserRole, (userRole) => userRole.users, { cascade: true })
+  userRoles: UserRole[];
 }

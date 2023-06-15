@@ -16,11 +16,15 @@ export class UserRole extends Base {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => UserInfo, (user) => user.userRoles, { onDelete: 'CASCADE' })
+  @ManyToOne(() => UserInfo, (user) => user.userRoles, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   users: UserInfo;
 
-  @ManyToOne(() => RoleInfo, (role) => role.userRoles, { onDelete: 'CASCADE' })
+  @ManyToOne(() => RoleInfo, (role) => role.userRoles, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   roles: RoleInfo;
 }

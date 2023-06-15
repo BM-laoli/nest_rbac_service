@@ -25,6 +25,6 @@ export class RoleInfo extends Base {
   @Column()
   description: string;
 
-  @OneToMany(() => UserRole, (userRole) => userRole.roles)
-  userRoles: UserInfo[];
+  @OneToMany(() => UserRole, (userRole) => userRole.roles, { cascade: true })
+  userRoles: UserRole[];
 }
