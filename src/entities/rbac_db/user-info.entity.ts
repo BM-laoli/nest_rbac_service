@@ -4,6 +4,7 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -35,7 +36,6 @@ export class UserInfo extends Base {
   })
   state: number;
 
-  @ManyToMany(() => RoleInfo, (role) => role.users)
-  @JoinTable()
-  roles: RoleInfo[];
+  @OneToMany(() => UserRole, (userRole) => userRole.users)
+  userRoles: UserInfo[];
 }

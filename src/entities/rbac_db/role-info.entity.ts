@@ -25,11 +25,6 @@ export class RoleInfo extends Base {
   @Column()
   description: string;
 
-  @ManyToMany(() => UserInfo, (user) => user.roles)
-  @JoinTable()
-  users: UserInfo[];
-
-  // ?
-  @OneToMany(() => RolePermission, (rolePermission) => rolePermission.roles)
-  rolePermissions: RolePermission[];
+  @OneToMany(() => UserRole, (userRole) => userRole.roles)
+  userRoles: UserInfo[];
 }

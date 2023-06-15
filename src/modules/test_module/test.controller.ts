@@ -40,7 +40,11 @@ export class TestController {
     const value = await this.zkConfig.getConfig(
       '/RBAC_Service/RESTAPI/a/b/c/d',
     );
-
+    try {
+      await this.tsService.t1();
+    } catch (e) {
+      this.logger.log('logger', e);
+    }
     // await this.tsService.t1({
     //   username: '2',
     //   password: '123',
@@ -53,7 +57,7 @@ export class TestController {
     //   username: '2',
     // });
 
-    this.logger.log('logger', TestController.name);
+    // this.logger.log('logger', TestController.name);
     throw new Error('error i have some error');
     // throw new HttpException(
     //   {

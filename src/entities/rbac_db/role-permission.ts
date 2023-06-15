@@ -14,9 +14,9 @@ export class RolePermission {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToMany(() => RoleInfo, (role) => role.rolePermissions)
-  roles: RoleInfo[];
+  // @ManyToMany(() => RoleInfo, (role) => role.)
+  // roles: RoleInfo[];
 
-  @ManyToMany(() => Permission, (permission) => permission.roles)
-  permissions: Permission[];
+  // @ManyToMany(() => Permission, (permission) => permission.roles)
+  // permissions: Permission[];
 }
