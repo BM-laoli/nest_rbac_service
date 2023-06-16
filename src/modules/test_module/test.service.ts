@@ -5,7 +5,9 @@ import {
   InjectRepository,
   InjectConnection,
 } from '@nestjs/typeorm';
+import { MIN } from 'class-validator';
 import { log } from 'console';
+import { Menu } from 'src/entities/rbac_db/menu.entity';
 import { RoleInfo } from 'src/entities/rbac_db/role-info.entity';
 import { UserInfo } from 'src/entities/rbac_db/user-info.entity';
 import { UserRole } from 'src/entities/rbac_db/user-role.entity';
@@ -30,8 +32,10 @@ export class TestService {
 
   async t1() {
     // const value = await this.generateTestManyToMany();
-    const value = await this.queryTestManyToMany();
-    console.log(value);
+    // const value = await this.queryTestManyToMany();
+    // const value = await this.generateTestMenu();
+    const value = await this.getMenus();
+    console.log('value => ', value);
     return value;
   }
 
@@ -118,4 +122,45 @@ export class TestService {
     // .getRawMany();
     return usersWithRoles;
   }
+
+  // 测试 menu
+  async generateTestMenu() {
+    const m1 = new Menu();
+    m1.name = '首页';
+    m1.type = 2;
+    m1.icon = 'fa-cog';
+    m1.description = '首页';
+
+    await this.connection.manager.save(Menu, m1);
+
+    const m2 = new Menu();
+    m2.name = '系统管理';
+    m2.type = 1;
+    m2.icon = 'fa-cog';
+    m2.description = '系统管理';
+
+    const m3 = new Menu();
+    m3.name = '用户管理';
+    m3.type = 2;
+    m3.icon = 'fa-cog';
+    m3.description = '用户管理';
+
+    m2.childMenus = [m3];
+    await this.connection.manager.save(Menu, m2);
+  }
+
+  async getMenus() {
+    const allDBValue = await this.entityManager
+      .createQueryBuilder(Menu, 'menu')
+      .leftJoinAndSelect('menu.childMenus', 'childMenus')
+      .getMany();
+
+    const res = allDBValue.map((m) => ({
+      ...m,
+      childMenus: m.childMenus.map((c) => ({ ...c })),
+    }));
+
+    return res;
+  }
+  // 测试 action button
 }

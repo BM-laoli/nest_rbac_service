@@ -1,8 +1,8 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Base } from './base';
-import { RolePermission } from './role-permission';
-// import { PermissionAB } from './permission-ab.entity';
-// import { PermissionMenu } from './permission-menu.entity';
+import { RolePermission } from './role-permission.entity';
+import { PermissionAB } from './permission-ab.entity';
+import { PermissionMenu } from './permission-menu.entity';
 
 @Entity()
 export class Permission extends Base {
@@ -23,17 +23,17 @@ export class Permission extends Base {
   )
   rolePermissions: RolePermission[];
 
-  // @OneToMany(
-  //   () => PermissionAB,
-  //   (rolePermission) => rolePermission.permission,
-  //   { cascade: true },
-  // )
-  // permissionABs: PermissionAB[];
+  @OneToMany(
+    () => PermissionAB,
+    (rolePermission) => rolePermission.permission,
+    { cascade: true },
+  )
+  permissionABs: PermissionAB[];
 
-  // @OneToMany(
-  //   () => PermissionMenu,
-  //   (permissionMenu) => permissionMenu.permission,
-  //   { cascade: true },
-  // )
-  // permissionMenus: PermissionMenu[];
+  @OneToMany(
+    () => PermissionMenu,
+    (permissionMenu) => permissionMenu.permission,
+    { cascade: true },
+  )
+  permissionMenus: PermissionMenu[];
 }

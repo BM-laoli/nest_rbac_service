@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Base } from './base';
-import { RolePermission } from './role-permission';
+import { RolePermission } from './role-permission.entity';
 import { UserInfo } from './user-info.entity';
 import { UserRole } from './user-role.entity';
 
