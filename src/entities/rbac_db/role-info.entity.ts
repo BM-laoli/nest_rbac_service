@@ -25,6 +25,12 @@ export class RoleInfo extends Base {
   @Column()
   description: string;
 
+  // 虚拟的key 表中是没有的
   @OneToMany(() => UserRole, (userRole) => userRole.roles, { cascade: true })
   userRoles: UserRole[];
+
+  @OneToMany(() => RolePermission, (rolePermission) => rolePermission.roles, {
+    cascade: true,
+  })
+  rolePermissions: RolePermission[];
 }
