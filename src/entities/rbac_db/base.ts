@@ -9,8 +9,8 @@ export abstract class Base {
   isDeleted: boolean;
 
   @CreateDateColumn()
-  create_time: number;
+  create_time: Date;
 
   @UpdateDateColumn()
-  update_time: number;
+  update_time: Date;
 }

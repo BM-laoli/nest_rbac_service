@@ -22,7 +22,7 @@ import { MysqlEntityClass } from 'src/decorators/MysqlEntityClass.decorator';
 import { TestDto } from 'src/dto/userInfo.dto';
 import { User_db2 } from 'src/entities/rbac_db_1/te2.entity';
 import { ClassSerializerMysqlInterceptor } from 'src/interceptor/classSerializerMysql.interceptor';
-import { VOTest } from 'src/vo/userInfo.vo';
+import { VOTest, VOUserInfo } from 'src/vo/userInfo.vo';
 import { Serializer } from 'v8';
 import { TestService } from './test.service';
 
@@ -36,12 +36,14 @@ export class TestController {
   ) {}
 
   @Get('/t1')
+  @SerializeOptions({})
+  @MysqlEntityClass(VOUserInfo)
+  @UseInterceptors(ClassSerializerMysqlInterceptor)
   async t1() {
     const value = await this.zkConfig.getConfig(
       '/RBAC_Service/RESTAPI/a/b/c/d',
     );
     try {
-      await this.tsService.t1();
     } catch (e) {
       this.logger.log('logger', e);
     }
@@ -58,7 +60,7 @@ export class TestController {
     // });
 
     // this.logger.log('logger', TestController.name);
-    throw new Error('error i have some error');
+    // throw new Error('error i have some error');
     // throw new HttpException(
     //   {
     //     status: HttpStatus.FORBIDDEN,
@@ -66,6 +68,7 @@ export class TestController {
     //   },
     //   HttpStatus.FORBIDDEN,
     // );
+    return await this.tsService.t1();
   }
 
   @Post('/t1')

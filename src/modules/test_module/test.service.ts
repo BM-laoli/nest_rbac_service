@@ -32,9 +32,7 @@ export class TestService {
     // const value = await this.generateTestManyToMany();
     const value = await this.queryTestManyToMany();
     console.log(value);
-    return {
-      name: '1',
-    };
+    return value;
   }
 
   async t2(data: any) {
@@ -89,15 +87,35 @@ export class TestService {
 
   async queryTestManyToMany() {
     const usersWithRoles = await this.userInfoRepository
+      // 使用这种方式的话 你需要 进行 Serializer
       .createQueryBuilder('user')
-      // .leftJoinAndSelect('user.userRoles', 'userRole')
-      // .leftJoinAndSelect('userRole.roles', 'role')
-      // .getMany();
-      .leftJoin('user.userRoles', 'userRole')
-      .leftJoin('userRole.roles', 'role')
-      .addSelect(['role.id', 'role.name', 'role.icon', 'role.description'])
-      .select(['user.id', 'user.username', 'user.email', 'user.state'])
+      .leftJoinAndSelect('user.userRoles', 'userRole')
+      .leftJoinAndSelect('userRole.roles', 'role')
       .getMany();
+    // .leftJoin('user.userRoles', 'userRole')
+    // .leftJoin('userRole.roles', 'role')
+    // .addSelect(['role.id', 'role.name', 'role.icon', 'role.description'])
+    // .select(['user.id', 'user.username', 'user.email', 'user.state'])
+    // .getMany();
+    // 纯sql 推荐使用 （因为看起来爽
+    // .select([
+    //   'user.id',
+    //   'user.username',
+    //   'user.email',
+    //   'user.state',
+    //   `JSON_ARRAYAGG(
+    //   JSON_OBJECT(
+    //     'id', role.id,
+    //     'name', role.name,
+    //     'icon', role.icon,
+    //     'description', role.description
+    //   )
+    // ) AS roles`,
+    // ])
+    // .leftJoin('user.userRoles', 'userRole')
+    // .leftJoin('userRole.roles', 'role')
+    // .groupBy('user.id')
+    // .getRawMany();
     return usersWithRoles;
   }
 }
