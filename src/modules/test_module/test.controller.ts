@@ -35,6 +35,7 @@ export class TestController {
     private readonly logger: LoggerService,
   ) {}
 
+  // 测试 sql 1
   @Get('/t1')
   @SerializeOptions({})
   @MysqlEntityClass(VOUserInfo)
@@ -106,5 +107,11 @@ export class TestController {
   async findT3(): Promise<Array<VOTest>> {
     const value = (await this.tsService.t3()) as any;
     return value;
+  }
+
+  // 测试 sql 2
+  @Get('/t4')
+  async t4() {
+    return this.tsService.t2();
   }
 }

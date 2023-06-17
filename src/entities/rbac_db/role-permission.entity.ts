@@ -6,6 +6,7 @@ import {
   JoinTable,
   JoinColumn,
   ManyToOne,
+  PrimaryColumn,
 } from 'typeorm';
 import { Permission } from './permission.entity';
 import { RoleInfo } from './role-info.entity';
@@ -19,12 +20,24 @@ export class RolePermission extends Base {
   @ManyToOne(() => RoleInfo, (role) => role.rolePermissions, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn()
+  @JoinColumn({
+    name: 'role_id',
+    referencedColumnName: 'id',
+  })
   roles: RoleInfo;
 
   @ManyToOne(() => Permission, (permission) => permission.rolePermissions, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn()
+  @JoinColumn({
+    name: 'permission_id',
+    referencedColumnName: 'id',
+  })
   permission: Permission;
+
+  @PrimaryColumn()
+  role_id: number;
+
+  @PrimaryColumn()
+  permission_id: number;
 }

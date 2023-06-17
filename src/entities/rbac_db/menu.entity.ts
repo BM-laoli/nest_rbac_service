@@ -33,6 +33,7 @@ export class Menu extends Base {
 
   @OneToMany(() => Menu, (menu) => menu.parentMenu, { cascade: true })
   childMenus: Menu[];
+  // 一般而言 OneToMany 的这一边为 虚拟键
 
   // 虚拟键
   @OneToMany(() => PermissionMenu, (premissionMenu) => premissionMenu.menu, {
