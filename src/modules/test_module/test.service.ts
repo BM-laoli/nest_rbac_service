@@ -37,9 +37,9 @@ export class TestService {
 
   async t1() {
     // const value = await this.generateTestManyToMany();
-    const value = await this.queryTestManyToMany();
+    // const value = await this.queryTestManyToMany();
     // const value = await this.generateTestMenu();
-    // const value = await this.getMenus();
+    const value = await this.getMenus();
     console.log('value => ', value);
     return value;
   }
@@ -243,47 +243,48 @@ export class TestService {
       permissionMenu3,
     ];
 
-    // const value = await this.connection.transaction(async (manager) => {
-    //   // save UserInfo and roleInfo entity
-    //   await manager.save([
-    //     permissions,
-    //     permissionMenu,
-    //     permissionMenu2,
-    //     permissionMenu3,
-    //   ]);
+    const value = await this.connection.transaction(async (manager) => {
+      // save UserInfo and roleInfo entity
+      await manager.save([
+        permissions,
+        permissionMenu,
+        permissionMenu2,
+        permissionMenu3,
+      ]);
 
-    //   // 设置userRole1和userRole2的users和roles字段
-    //   permissionMenu.permission = permissions;
-    //   permissionMenu.menu = menu1[0];
+      // 设置userRole1和userRole2的users和roles字段
+      permissionMenu.permission = permissions;
+      permissionMenu.menu = menu1[0];
 
-    //   permissionMenu2.permission = permissions;
-    //   permissionMenu2.menu = menu1[1];
+      permissionMenu2.permission = permissions;
+      permissionMenu2.menu = menu1[1];
 
-    //   permissionMenu3.permission = permissions;
-    //   permissionMenu3.menu = menu1[2];
+      permissionMenu3.permission = permissions;
+      permissionMenu3.menu = menu1[2];
 
-    //   // 保存UserRole实体
-    //   await manager.save([permissionMenu, permissionMenu2, permissionMenu3]);
-    // });
+      // 保存UserRole实体
+      await manager.save([permissionMenu, permissionMenu2, permissionMenu3]);
+    });
+    return value;
 
-    const queryValue = await this.entityManager
-      .createQueryBuilder(Permission, 'permission')
-      .select([
-        'permission.id',
-        'permission.name',
-        `JSON_ARRAYAGG(
-          JSON_OBJECT(
-            'id', menu.id,
-            'name', menu.name
-          )
-        ) AS menus`,
-      ])
-      .leftJoin('permission.permissionMenus', 'permissionMenus')
-      .leftJoin('permissionMenus.menu', 'menu')
-      .groupBy('permission.id')
-      .getRawMany();
+    // const queryValue = await this.entityManager
+    //   .createQueryBuilder(Permission, 'permission')
+    //   .select([
+    //     'permission.id',
+    //     'permission.name',
+    //     `JSON_ARRAYAGG(
+    //       JSON_OBJECT(
+    //         'id', menu.id,
+    //         'name', menu.name
+    //       )
+    //     ) AS menus`,
+    //   ])
+    //   .leftJoin('permission.permissionMenus', 'permissionMenus')
+    //   .leftJoin('permissionMenus.menu', 'menu')
+    //   .groupBy('permission.id')
+    //   .getRawMany();
 
-    return queryValue;
+    // return queryValue;
   }
 
   // 测试 permission-ab
@@ -308,48 +309,49 @@ export class TestService {
 
     permissions.permissionABs = [permissionAB, permissionAB2, permissionAB3];
 
-    // const value = await this.connection.transaction(async (manager) => {
-    //   // save UserInfo and roleInfo entity
-    //   await manager.save([
-    //     permissions,
-    //     permissionAB,
-    //     permissionAB2,
-    //     permissionAB3,
-    //   ]);
+    const value = await this.connection.transaction(async (manager) => {
+      // save UserInfo and roleInfo entity
+      await manager.save([
+        permissions,
+        permissionAB,
+        permissionAB2,
+        permissionAB3,
+      ]);
 
-    //   // 设置userRole1和userRole2的users和roles字段
-    //   permissionAB.permission = permissions;
-    //   permissionAB.actionButton = ACB[0];
+      // 设置userRole1和userRole2的users和roles字段
+      permissionAB.permission = permissions;
+      permissionAB.actionButton = ACB[0];
 
-    //   permissionAB2.permission = permissions;
-    //   permissionAB2.actionButton = ACB[1];
+      permissionAB2.permission = permissions;
+      permissionAB2.actionButton = ACB[1];
 
-    //   permissionAB3.permission = permissions;
-    //   permissionAB3.actionButton = ACB[2];
+      permissionAB3.permission = permissions;
+      permissionAB3.actionButton = ACB[2];
 
-    //   // 保存UserRole实体
-    //   await manager.save([permissionAB, permissionAB2, permissionAB3]);
-    // });
+      // 保存UserRole实体
+      await manager.save([permissionAB, permissionAB2, permissionAB3]);
+    });
+    return value;
 
-    const queryValue = await this.entityManager
-      .createQueryBuilder(Permission, 'permission')
-      .select([
-        'permission.id',
-        'permission.name',
-        `JSON_ARRAYAGG(
-          JSON_OBJECT(
-            'id', actionButton.id,
-            'name', actionButton.name,
-            'code', actionButton.code
-          )
-        ) AS actionButton`,
-      ])
-      .leftJoin('permission.permissionABs', 'permissionABs')
-      .leftJoin('permissionABs.actionButton', 'actionButton')
-      .groupBy('permission.id')
-      .getRawMany();
+    // const queryValue = await this.entityManager
+    //   .createQueryBuilder(Permission, 'permission')
+    //   .select([
+    //     'permission.id',
+    //     'permission.name',
+    //     `JSON_ARRAYAGG(
+    //       JSON_OBJECT(
+    //         'id', actionButton.id,
+    //         'name', actionButton.name,
+    //         'code', actionButton.code
+    //       )
+    //     ) AS actionButton`,
+    //   ])
+    //   .leftJoin('permission.permissionABs', 'permissionABs')
+    //   .leftJoin('permissionABs.actionButton', 'actionButton')
+    //   .groupBy('permission.id')
+    //   .getRawMany();
 
-    return queryValue;
+    // return queryValue;
   }
 
   // 测试 permission-role
@@ -385,56 +387,134 @@ export class TestService {
 
     role.rolePermissions = [permissionRole, permissionRole2];
 
-    // const value = await this.connection.transaction(async (manager) => {
-    //   // save UserInfo and roleInfo entity
-    //   await manager.save([role, permissionRole, permissionRole2]);
+    const value = await this.connection.transaction(async (manager) => {
+      // save UserInfo and roleInfo entity
+      await manager.save([role, permissionRole, permissionRole2]);
 
-    //   permissionRole.permission = permissions;
-    //   permissionRole.roles = role;
+      permissionRole.permission = permissions;
+      permissionRole.roles = role;
 
-    //   permissionRole2.permission = permissions2;
-    //   permissionRole2.roles = role;
+      permissionRole2.permission = permissions2;
+      permissionRole2.roles = role;
 
-    //   // // 保存UserRole实体
-    //   await manager.save([permissionRole, permissionRole2]);
-    // });
+      // // 保存UserRole实体
+      await manager.save([permissionRole, permissionRole2]);
+    });
+    return value;
 
-    const queryValue = await this.entityManager
-      .createQueryBuilder(RoleInfo, 'RoleInfo')
-      .select([
-        'RoleInfo.id',
-        'RoleInfo.name',
-        `JSON_ARRAYAGG(
-          JSON_OBJECT(
-            'id', permission.id,
-            'name', permission.name
-          )
-        ) AS permissions`,
-      ])
-      .leftJoin('RoleInfo.rolePermissions', 'rolePermissions')
-      .leftJoin('rolePermissions.permission', 'permission')
-      .groupBy('RoleInfo.id')
-      .getRawMany();
-    return queryValue;
-    // return value;
+    // const queryValue = await this.entityManager
+    //   .createQueryBuilder(RoleInfo, 'RoleInfo')
+    //   .select([
+    //     'RoleInfo.id',
+    //     'RoleInfo.name',
+    //     `JSON_ARRAYAGG(
+    //       JSON_OBJECT(
+    //         'id', permission.id,
+    //         'name', permission.name
+    //       )
+    //     ) AS permissions`,
+    //   ])
+    //   .leftJoin('RoleInfo.rolePermissions', 'rolePermissions')
+    //   .leftJoin('rolePermissions.permission', 'permission')
+    //   .groupBy('RoleInfo.id')
+    //   .getRawMany();
+    // return queryValue;
   }
 
   // 完整测试 从 user 查起 把 他的role permission menu acb 都查出来
   // 注意数据的一致性问题
   async getUserAll() {
-    // return await this.entityManager
-    //   .createQueryBuilder(UserInfo, 'UserInfo')
-    //   .getMany();
+    const userInfo = await this.connection
+      .getRepository(UserInfo)
+      .createQueryBuilder('userInfo')
+      .leftJoinAndSelect('userInfo.userRoles', 'userRole')
+      .leftJoinAndSelect('userRole.roles', 'role')
+      .leftJoinAndSelect('role.rolePermissions', 'rolePermission')
+      .leftJoinAndSelect('rolePermission.permission', 'permission')
+      .leftJoinAndSelect('permission.permissionMenus', 'permissionMenu')
+      .leftJoinAndSelect('permissionMenu.menu', 'menu')
+      .where('userInfo.id = :id', { id: 1 })
+      .getOne();
 
-    const rolePermission = await this.connection
-      .getRepository(RolePermission)
-      .findOne({
-        where: {
-          role_id: 1,
-          // permission_id: 2,
-        },
-        relations: ['roles', 'permission'],
+    const roles = userInfo.userRoles.map((userRole) => {
+      return {
+        id: userRole.roles.id,
+        name: userRole.roles.name,
+        icon: userRole.roles.icon,
+        description: userRole.roles.description,
+      };
+    });
+
+    const menusMap = new Map();
+    const menus = userInfo.userRoles.reduce((prev, userRole) => {
+      const rolePermissions = userRole.roles.rolePermissions;
+      rolePermissions.forEach((rolePermission) => {
+        const permission = rolePermission.permission;
+        const permissionMenus = permission.permissionMenus;
+        permissionMenus.forEach((permissionMenu) => {
+          const menu = permissionMenu.menu;
+          if (!menusMap.has(menu.id)) {
+            menusMap.set(menu.id, true);
+            prev.push({
+              name: menu.name,
+              type: menu.type,
+              description: menu.description,
+            });
+          }
+        });
       });
-    return rolePermission;
+      return prev;
+    }, []);
+
+    const result = {
+      username: userInfo.username,
+      email: userInfo.email,
+      roles,
+      menus,
+    };
+    return result;
+
+    // -----
+    // const rolePermission = await this.connection
+    //   .getRepository(UserInfo)
+    //   .findOne({
+    //     where: {
+    //       id: 1,
+    //     },
+    //     // 这里有问题 没办法过
+    //     relations: {
+    //       userRoles: {
+    //         roles: {
+    //           rolePermissions: {
+    //             roles: {
+    //               rolePermissions: {0000
+    //                 permission: {
+    //                   permissionMenus: {
+    //                     menu: true,
+    //                   },
+    //                 },
+    //               },
+    //             },
+    //           },
+    //         },
+    //       },
+    //     },
+    //   });
+    // return rolePermission;
+
+    // ------
+    // const value = await this.entityManager
+    //   .createQueryBuilder(RolePermission, 'rolePermission')
+    //   .where('rolePermission.role_id = :id', { id: 1 })
+    //   .andWhere('rolePerrmission.permission_id = :id', { id: 2 })
+    //   .getOne();
+    // const value = await this.connection.getRepository(RolePermission).findOne({
+    //   where: {
+    //     role_id: 1,
+    //     permission_id: 2,
+    //   },
+    // });
+
+    // return value;
   }
 }
