@@ -11,21 +11,21 @@ import AuthUserService from './authUser.service';
 @Module({
   imports: [
     PassportModule,
-    // JwtModule.registerAsync({
-    //   useFactory: async (zkService: ZKService) => {
-    //     const auth = await zkService.getConfig<AuthInfo>(
-    //       '/RBAC_Service/AuthInfo',
-    //     );
-    //     return {
-    //       secret: auth.secret,
-    //       signOptions: { expiresIn: auth.expiresIn },
-    //     };
-    //   },
-    //   inject: [ZKService],
-    // }),
+    JwtModule.registerAsync({
+      useFactory: async (zkService: ZKService) => {
+        const auth = await zkService.getConfig<AuthInfo>(
+          '/RBAC_Service/AuthInfo',
+        );
+        return {
+          secret: auth.secret,
+          signOptions: { expiresIn: auth.expiresIn },
+        };
+      },
+      inject: [ZKService],
+    }),
   ],
-  // controllers: [AuthController],
-  // providers: [AuthUserService, AuthService, JwtStrategy, CacheService],
-  // exports: [AuthService],
+  controllers: [AuthController],
+  providers: [AuthUserService, AuthService, JwtStrategy, CacheService],
+  exports: [AuthService],
 })
 export class AuthModule {}

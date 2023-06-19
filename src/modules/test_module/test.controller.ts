@@ -19,7 +19,7 @@ import {
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { ZKService } from 'src/core/zk/zk.service';
 import { MysqlEntityClass } from 'src/core/decorators/mysqlEntityClass.decorator';
-import { TestDto } from 'src/dto/userInfo.dto';
+import { TestDto } from 'src/dto/tes.dto';
 import { User_db2 } from 'src/entities/rbac_db_1/te2.entity';
 
 import { VOTest, VOUserInfo } from 'src/vo/userInfo.vo';

@@ -24,9 +24,9 @@ export class AuthService {
       case 1:
         return this.certificate(authResult.user);
       case 2:
-        return this.sendError('账号或密码不正确');
+        this.sendError('账号或密码不正确');
       default:
-        return this.sendError('查无此人');
+        this.sendError('查无此人');
     }
   }
 
@@ -36,7 +36,9 @@ export class AuthService {
     password: string,
   ): Promise<{ code: number; user: UserInfo | undefined }> {
     // console.log('JWT验证 - Step 2: 校验用户信息');
-    const user = await this.userService.findOne(username);
+    const user = await this.userService.findOne({
+      username: username,
+    });
 
     if (user) {
       // 通过密码盐，加密传参，再与数据库里的比较，判断是否相等
@@ -79,8 +81,12 @@ export class AuthService {
         60 * 60 * 8,
       );
 
+      const userInfo = await this.userService.findOne({
+        id: user.id,
+      });
       return {
         token,
+        userInfo: userInfo,
       };
     } catch (error) {
       return this.sendError('500');

@@ -9,4 +9,12 @@ export default class UserService {
     @InjectEntityManager('rbac_db')
     private entityManager: EntityManager,
   ) {}
+
+  getUserList(username: string) {}
+
+  getUserInfo(username: string) {}
+
+  updateUser(username: string) {}
+
+  deleteUser(username: string) {}
 }

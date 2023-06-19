@@ -18,7 +18,9 @@ export class UserInfo extends Base {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({
+    unique: true,
+  })
   username: string;
 
   @Column()

@@ -1,13 +1,14 @@
 import { PartialType } from '@nestjs/mapped-types';
+import { PartialId } from './base.dto';
 import { IsEmail, IsNotEmpty } from 'class-validator';
 
-// 应对 无id 是创建 有id是修改的逻辑
-class CreateTestDto {
-  id: string;
-}
+class UserInfoDTO extends PartialType(PartialId) {
+  @IsNotEmpty({
+    message: '用户名不能为空',
+  })
+  username: string;
 
-export class TestDto extends PartialType(CreateTestDto) {
-  @IsEmail()
+  @IsEmail({})
   email: string;
 
   @IsNotEmpty({
@@ -15,3 +16,17 @@ export class TestDto extends PartialType(CreateTestDto) {
   })
   password: string;
 }
+
+class AuthLoginDTO {
+  @IsNotEmpty({
+    message: '用户名不能为空',
+  })
+  username: string;
+
+  @IsNotEmpty({
+    message: '密码不能为空',
+  })
+  password: string;
+}
+
+export { UserInfoDTO, AuthLoginDTO };
