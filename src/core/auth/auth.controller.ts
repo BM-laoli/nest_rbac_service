@@ -13,6 +13,8 @@ import { MysqlEntityClass } from '../decorators/mysqlEntityClass.decorator';
 import { AuthInfoVO } from 'src/vo/auth.vo';
 import { ClassSerializerMysqlInterceptor } from '../interceptor/classSerializerMysql.interceptor';
 import AuthUserService from './authUser.service';
+import { comparePassword, encryptPassword } from '../utils/crypt';
+import { log } from 'console';
 
 @Controller({
   path: '/auth',
@@ -39,7 +41,12 @@ export class AuthController {
   @NotAuth()
   @MysqlEntityClass(AuthInfoVO)
   @Post('/regestier')
-  register(@Body() userInfo: UserInfoDTO) {
-    return this.authUserService.register(userInfo);
+  async register(@Body() userInfo: UserInfoDTO) {
+    await this.authUserService.register(userInfo);
+
+    return this.authService.loginSingToken({
+      username: userInfo.username,
+      password: userInfo.password,
+    });
   }
 }

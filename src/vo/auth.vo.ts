@@ -1,41 +1,31 @@
-import {
-  Exclude,
-  Expose,
-  Transform,
-  Type,
-  classToPlain,
-} from 'class-transformer';
+import { Exclude, Expose, Type } from 'class-transformer';
+import { ActionButton } from 'src/entities/rbac_db/action-button.entity';
+import { Menu } from 'src/entities/rbac_db/menu.entity';
 import { RoleInfo } from 'src/entities/rbac_db/role-info.entity';
 import { UserInfo } from 'src/entities/rbac_db/user-info.entity';
-import { UserRole } from 'src/entities/rbac_db/user-role.entity';
 
 class UserInfoVO implements UserInfo {
   @Exclude()
   password: string;
 
-  @Expose()
-  userRoles: UserRole[];
+  @Exclude()
+  userRoles: any[];
 
   @Expose()
-  @Transform((obj) => {
-    return obj.obj;
-  })
-  get roles(): Array<RoleInfo> {
-    console.log(this.userRoles);
+  roles: RoleInfo[];
 
-    return this.userRoles.map((item) => ({ ...item.roles }));
-  }
+  @Expose()
+  menus: Menu[];
 
-  constructor(partial: Partial<UserInfoVO>) {
-    // super();
-    Object.assign(this, partial);
-  }
+  @Expose()
+  actionButons: ActionButton[];
+
   @Exclude()
   id: number;
 
   @Exclude()
   state: number;
-  å;
+
   @Exclude()
   isDeleted: boolean;
 
@@ -47,6 +37,10 @@ class UserInfoVO implements UserInfo {
   create_time: Date;
 
   update_time: Date;
+
+  constructor(partial: Partial<UserInfoVO>) {
+    Object.assign(this, partial);
+  }
 }
 
 class AuthInfoVO {
@@ -55,11 +49,6 @@ class AuthInfoVO {
 
   @Expose()
   @Type(() => UserInfoVO)
-  @Transform((value) => {
-    return {
-      ...value.value,
-    };
-  })
   userInfo: UserInfoVO;
 
   constructor(partial: Partial<AuthInfoVO>) {

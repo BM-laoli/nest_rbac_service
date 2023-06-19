@@ -1,8 +1,7 @@
 import * as bcrypt from 'bcrypt';
-
-const saltRounds = 10;
-
 export function encryptPassword(password: string): string {
+  const saltRounds = 10;
+
   const salt = bcrypt.genSaltSync(saltRounds);
   return bcrypt.hashSync(password, salt);
 }

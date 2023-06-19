@@ -582,3 +582,128 @@ export class RolePermission {
 
 需要注意的是，使用复合主键只能确保在查询实体时返回正确的数据，而无法处理数据库中的重复记录。如果您需要确保数据库中不会出现重复记录，您可能需要使用其他方法，例如在 Permission 实体中使用唯一约束。
 ```
+
+### 如此这般的 serilaze 果然好用吗？
+>
+> 详见下方代码
+
+```ts
+  @NotAuth()
+  @MysqlEntityClass(AuthInfoVO)
+  @Post('/login')
+  async login(@Body() loginParams: AuthLoginDTO) {
+    return this.authService.loginSingToken(loginParams);
+  }
+
+  @NotAuth()
+  @MysqlEntityClass(AuthInfoVO)
+  @Post('/regestier')
+  async register(@Body() userInfo: UserInfoDTO) {
+    await this.authUserService.register(userInfo);
+
+    return this.authService.loginSingToken({
+      username: userInfo.username,
+      password: userInfo.password,
+    });
+  }
+
+  // VO
+
+class UserInfoVO implements UserInfo {
+  @Exclude()
+  password: string;
+
+  @Exclude()
+  userRoles: any[];
+
+  @Expose()
+  roles: RoleInfo[];
+
+  @Expose()
+  menus: Menu[];
+
+  @Expose()
+  actionButons: ActionButton[];
+
+  @Exclude()
+  id: number;
+
+  @Exclude()
+  state: number;
+
+  @Exclude()
+  isDeleted: boolean;
+
+  @Expose()
+  username: string;
+
+  email: string;
+
+  create_time: Date;
+
+  update_time: Date;
+
+  constructor(partial: Partial<UserInfoVO>) {
+    Object.assign(this, partial);
+  }
+}
+
+class AuthInfoVO {
+  @Expose()
+  public token: string;
+
+  @Expose()
+  @Type(() => UserInfoVO)
+  userInfo: UserInfoVO;
+
+  constructor(partial: Partial<AuthInfoVO>) {
+    Object.assign(this, partial);
+  }
+}
+
+// QueryBD
+
+ const sqlRes = await this.entityManager.findOne(UserInfo, {
+      where: { username: useInfo.username, id: useInfo.id },
+      relations: {
+        userRoles: {
+          roles: {
+            rolePermissions: {
+              permission: {
+                permissionMenus: {
+                  menu: true,
+                },
+                permissionABs: {
+                  actionButton: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const menusMap = new Map();
+    const menus = sqlRes.userRoles.reduce((prev, userRole) => {
+      const rolePermissions = userRole.roles.rolePermissions;
+      rolePermissions.forEach((rolePermission) => {
+        const permission = rolePermission.permission;
+        const permissionMenus = permission.permissionMenus;
+        permissionMenus.forEach((permissionMenu) => {
+          const menu = permissionMenu.menu;
+          if (!menusMap.has(menu.id)) {
+            menusMap.set(menu.id, true);
+            prev.push({
+              name: menu.name,
+              type: menu.type,
+              description: menu.description,
+            });
+          }
+        });
+      });
+      return prev;
+    }, []);
+....
+
+// 实际上我们可以直接用sql 去化解
+```

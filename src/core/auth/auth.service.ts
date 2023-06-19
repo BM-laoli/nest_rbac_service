@@ -3,7 +3,6 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { comparePassword } from '../utils/crypt';
 import { CacheService } from '../cache/cache.service';
-import UserService from 'src/modules/rabc/services/user.service';
 import { UserInfo } from 'src/entities/rbac_db/user-info.entity';
 import AuthUserService from './authUser.service';
 
