@@ -5,7 +5,7 @@ import * as express from 'express';
 import { AllExceptionsFilter } from './core/filter/anyException.filter';
 import { HttpExceptionFilter } from './core/filter/httpException.filter';
 import { ValidationPipe as OriginValidationPipe } from '@nestjs/common';
-import { ValidationPipe } from './pip/validation.pipe';
+import { ValidationPipe } from './core/pip/validation.pipe';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import rateLimit from 'express-rate-limit';
 import { HttpReqTransformInterceptor } from './core/interceptor/httpReq.interceptor';
