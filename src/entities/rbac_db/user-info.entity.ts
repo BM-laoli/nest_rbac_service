@@ -24,9 +24,7 @@ export class UserInfo extends Base {
   @Column()
   email: string;
 
-  @Column({
-    select: false, // 查询时要 hidden 掉
-  })
+  @Column()
   password: string;
 
   @Column({

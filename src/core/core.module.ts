@@ -13,6 +13,8 @@ import {
   WinstonModule,
 } from 'nest-winston';
 import * as DailyRotateFile from 'winston-daily-rotate-file';
+import { AuthModule } from './auth/auth.module';
+import { CacheModule } from './cache/cache.module';
 
 @Global()
 @Module({
@@ -56,29 +58,8 @@ import * as DailyRotateFile from 'winston-daily-rotate-file';
     MysqlModule.forRootAsync({
       dbs: InitConfig().mysqlDBS,
     }),
-    // TypeOrmModule.forRootAsync({
-    //   name: 'rbac_db',
-    //   useFactory: async (zkService: ZKService) => {
-    //     const DBConfigAll = await zkService.getConfig<Array<ConfigDBMYSQLType>>(
-    //       '/RBAC_Service/database/mysql',
-    //     );
-
-    //     return {
-    //       type: 'mysql',
-    //       name: DBConfigAll[0].name,
-    //       host: DBConfigAll[0].host,
-    //       port: DBConfigAll[0].port,
-    //       username: DBConfigAll[0].username,
-    //       password: DBConfigAll[0].password,
-    //       database: DBConfigAll[0].database,
-    //       entities: [
-    //         resolve(__dirname, '../entities/rbac_db/**/*.entity{.ts,.js}'),
-    //       ], // 扫描本项目中.entity.ts或者.entity.js的文件
-    //       synchronize: true,
-    //     };
-    //   },
-    //   inject: [ZKService],
-    // }),
+    CacheModule,
+    AuthModule,
   ],
   providers: [],
 })

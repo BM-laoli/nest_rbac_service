@@ -18,13 +18,14 @@ import {
 } from '@nestjs/common';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { ZKService } from 'src/core/zk/zk.service';
-import { MysqlEntityClass } from 'src/decorators/MysqlEntityClass.decorator';
+import { MysqlEntityClass } from 'src/core/decorators/mysqlEntityClass.decorator';
 import { TestDto } from 'src/dto/userInfo.dto';
 import { User_db2 } from 'src/entities/rbac_db_1/te2.entity';
-import { ClassSerializerMysqlInterceptor } from 'src/interceptor/classSerializerMysql.interceptor';
+
 import { VOTest, VOUserInfo } from 'src/vo/userInfo.vo';
 import { Serializer } from 'v8';
 import { TestService } from './test.service';
+import { ClassSerializerMysqlInterceptor } from 'src/core/interceptor/classSerializerMysql.interceptor';
 
 @Controller('test')
 export class TestController {
@@ -113,5 +114,10 @@ export class TestController {
   @Get('/t4')
   async t4() {
     return this.tsService.t2();
+  }
+
+  @Get('/t5')
+  async t5() {
+    return this.tsService.setRedis();
   }
 }

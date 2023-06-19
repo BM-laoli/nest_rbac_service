@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { classToPlain } from 'class-transformer';
 import { map, Observable, retry } from 'rxjs';
-import { MYSQL_ENTITY_CLASS } from 'src/decorators/MysqlEntityClass.decorator';
+import { MYSQL_ENTITY_CLASS } from 'src/core/decorators/mysqlEntityClass.decorator';
 
 @Injectable()
 export class ClassSerializerMysqlInterceptor extends ClassSerializerInterceptor {

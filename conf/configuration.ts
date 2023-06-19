@@ -12,5 +12,16 @@ export const config: RBAC_Service = {
   RBAC_Service: {
     database: db,
     RESTAPI: RESTAPI,
+    RedisConfig: {
+      host: 'localhost',
+      port: 6379,
+      db: 0,
+      family: 4,
+      password: '',
+    },
+    AuthInfo: {
+      secret: "1234567890-=qwertyuiop[]asdfghjkl;'zxcvbnm,./",
+      expiresIn: '8h',
+    },
   },
 };

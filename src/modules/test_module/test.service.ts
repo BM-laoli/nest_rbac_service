@@ -7,6 +7,7 @@ import {
 } from '@nestjs/typeorm';
 import { MIN } from 'class-validator';
 import { log } from 'console';
+import { CacheService } from 'src/core/cache/cache.service';
 import { ActionButton } from 'src/entities/rbac_db/action-button.entity';
 import { Menu } from 'src/entities/rbac_db/menu.entity';
 import { PermissionAB } from 'src/entities/rbac_db/permission-ab.entity';
@@ -33,6 +34,7 @@ export class TestService {
     private entityManager: EntityManager,
     @InjectConnection('rbac_db')
     private connection: Connection,
+    private readonly cacheService: CacheService,
   ) {}
 
   async t1() {
@@ -516,5 +518,9 @@ export class TestService {
     // });
 
     // return value;
+  }
+
+  async setRedis() {
+    return this.cacheService.set('testKey', '12313123', 4000);
   }
 }

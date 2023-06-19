@@ -5,6 +5,8 @@ type RBAC_Service = {
 type ConfigType = {
   database: ConfigDBType;
   RESTAPI: RESTAPI;
+  AuthInfo?: AuthInfo;
+  RedisConfig?: RedisConfig;
 };
 
 type ConfigDBType = {
@@ -32,4 +34,17 @@ type RESTAPI = {
       };
     };
   };
+};
+
+type AuthInfo = {
+  secret: string;
+  expiresIn: string;
+};
+
+type RedisConfig = {
+  host: string;
+  password: string;
+  db: number;
+  port: number;
+  family: number;
 };
