@@ -1,6 +1,11 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { PartialId } from './base.dto';
-import { IsEmail, IsNotEmpty } from 'class-validator';
+import { PagenationDTO, PartialId } from './base.dto';
+import {
+  IsEmail,
+  IsNotEmpty,
+  ValidateNested,
+  isNotEmpty,
+} from 'class-validator';
 
 class UserInfoDTO extends PartialType(PartialId) {
   @IsNotEmpty({
@@ -29,4 +34,4 @@ class AuthLoginDTO {
   password: string;
 }
 
-export { UserInfoDTO, AuthLoginDTO };
+export { UserInfoDTO, AuthLoginDTO, PagenationDTO };

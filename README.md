@@ -583,7 +583,12 @@ export class RolePermission {
 需要注意的是，使用复合主键只能确保在查询实体时返回正确的数据，而无法处理数据库中的重复记录。如果您需要确保数据库中不会出现重复记录，您可能需要使用其他方法，例如在 Permission 实体中使用唯一约束。
 ```
 
-### 如此这般的 serilaze 果然好用吗？
+# 坑多多
+>
+> 主要的坑是 这两个lib 的问题
+> class-transformer 和 class-validation
+
+# 如此这般的 serilaze 果然好用吗？
 >
 > 详见下方代码
 
@@ -706,4 +711,50 @@ class AuthInfoVO {
 ....
 
 // 实际上我们可以直接用sql 去化解
+```
+
+# 嵌套的Array？
+
+```ts
+https://github.com/typestack/class-transformer/issues/972
+
+class UserInfoDetailInfo implements UserInfo {
+  @Expose()
+  id: number;
+  @Expose()
+  username: string;
+  @Expose()
+  email: string;
+  @Expose()
+  state: number;
+  @Expose()
+  create_time: Date;
+  @Expose()
+  update_time: Date;
+
+  @Exclude()
+  password: string;
+  @Exclude()
+  userRoles: UserRole[];
+  @Exclude()
+  isDeleted: boolean;
+
+  constructor(partial: Partial<UserInfoDetailInfo>) {
+    Object.assign(this, partial);
+  }
+}
+class UserInfoListVO {
+  @Expose()
+  @Type(() => PagenationVO)
+  pageInfo: PagenationVO;
+
+  @Expose()
+  @Type(() => UserInfoDetailInfo)
+  list: UserInfoDetailInfo[];
+
+  constructor(partial: Partial<UserInfoListVO>) {
+    Object.assign(this, partial);
+  }
+}
+
 ```
