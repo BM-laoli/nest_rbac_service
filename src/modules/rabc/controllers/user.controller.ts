@@ -1,8 +1,10 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
   Param,
+  ParseArrayPipe,
   ParseIntPipe,
   Post,
   Put,
@@ -11,13 +13,13 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import UserService from '../services/user.service';
-import { log } from 'console';
 import { ClassSerializerMysqlInterceptor } from 'src/core/interceptor/classSerializerMysql.interceptor';
 import { MysqlEntityClass } from 'src/core/decorators/mysqlEntityClass.decorator';
 import { UserInfoListVO } from 'src/vo/userInfo.vo';
 import { NotAuth } from 'src/core/decorators/notAuth.decorator';
 import { PagenationDTO } from 'src/dto/base.dto';
 import { UserInfoVO } from 'src/vo/auth.vo';
+import { UpdateUserInfoDTO } from 'src/dto/userInfo.dto';
 
 @Controller({
   path: '/user',
@@ -45,12 +47,25 @@ export default class UserController {
   }
 
   @Put('/update-user')
-  updateUser() {
-    //
+  @NotAuth()
+  @MysqlEntityClass(UserInfoVO)
+  updateUser(@Body() userInfo: UpdateUserInfoDTO) {
+    return this.userService.updateUser(userInfo);
   }
 
   @Delete('/delete-user')
-  deleteUser() {
-    //
+  @NotAuth()
+  @MysqlEntityClass(null)
+  deleteUser(
+    @Query(
+      'ids',
+      new ParseArrayPipe({
+        items: Number,
+        separator: ',',
+      }),
+    )
+    ids: number[],
+  ) {
+    return this.userService.deleteUser(ids);
   }
 }

@@ -6,6 +6,7 @@ import {
   ValidateNested,
   isNotEmpty,
 } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 class UserInfoDTO extends PartialType(PartialId) {
   @IsNotEmpty({
@@ -23,15 +24,28 @@ class UserInfoDTO extends PartialType(PartialId) {
 }
 
 class AuthLoginDTO {
+  @ApiProperty({
+    description: '用户名',
+    example: 'admin',
+  })
   @IsNotEmpty({
     message: '用户名不能为空',
   })
   username: string;
 
+  @ApiProperty({
+    description: '用户名',
+    example: 'admin',
+  })
   @IsNotEmpty({
     message: '密码不能为空',
   })
   password: string;
 }
 
-export { UserInfoDTO, AuthLoginDTO, PagenationDTO };
+class UpdateUserInfoDTO extends PartialType(UserInfoDTO) {
+  // @ValidateNested()
+  roles?: Array<number>;
+}
+
+export { UserInfoDTO, AuthLoginDTO, PagenationDTO, UpdateUserInfoDTO };

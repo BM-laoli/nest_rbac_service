@@ -7,6 +7,7 @@ import {
   Inject,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { isArray } from 'class-validator';
 import { Request, Response } from 'express';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 
@@ -32,9 +33,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     this.logger.error(request.originalUrl, request.method, logFormat);
 
+    const value = exception.getResponse() as any;
     response.status(status).json({
       code: status,
-      message: exception.message,
+      message:
+        value.message && isArray(value.message)
+          ? value.message?.join(',')
+          : exception.message,
       data: null,
       success: false,
     });

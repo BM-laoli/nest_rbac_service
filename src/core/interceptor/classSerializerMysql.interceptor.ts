@@ -35,6 +35,9 @@ export class ClassSerializerMysqlInterceptor extends ClassSerializerInterceptor 
 
     return next.handle().pipe(
       map((data) => {
+        if (!MysqlEntity) {
+          return data;
+        }
         return instanceToPlain(this.transform(MysqlEntity, data), {});
       }),
       map((res: PlainLiteralObject | Array<PlainLiteralObject>) => {

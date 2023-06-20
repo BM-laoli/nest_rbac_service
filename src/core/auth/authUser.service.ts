@@ -47,11 +47,7 @@ export default class AuthUserService {
           const menu = permissionMenu.menu;
           if (!menusMap.has(menu.id)) {
             menusMap.set(menu.id, true);
-            prev.push({
-              name: menu.name,
-              type: menu.type,
-              description: menu.description,
-            });
+            prev.push(menu);
           }
         });
       });

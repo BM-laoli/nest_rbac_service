@@ -26,6 +26,7 @@ import { VOTest, VOUserInfo } from 'src/vo/userInfo.vo';
 import { Serializer } from 'v8';
 import { TestService } from './test.service';
 import { ClassSerializerMysqlInterceptor } from 'src/core/interceptor/classSerializerMysql.interceptor';
+import { NotAuth } from 'src/core/decorators/notAuth.decorator';
 
 @Controller('test')
 export class TestController {
@@ -92,6 +93,7 @@ export class TestController {
 
   // 如果你需要手动处理 array 比如 GET /?ids=1,2,3
   @Get('/t2')
+  @NotAuth()
   findByIds(
     @Query('ids', new ParseArrayPipe({ items: Number, separator: ',' }))
     ids: number[],

@@ -9,6 +9,7 @@ import { ValidationPipe } from './core/pip/validation.pipe';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import rateLimit from 'express-rate-limit';
 import { HttpReqTransformInterceptor } from './core/interceptor/httpReq.interceptor';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -43,6 +44,16 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  // Swager
+  const config = new DocumentBuilder()
+    .setTitle('RBAC Service Nestjs API ')
+    .setDescription('This is RBAS Service Nestjs API description')
+    .setVersion('1.0')
+    .addTag('最佳实践')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api-doc', app, document);
 
   await app.listen(3000);
 }

@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectEntityManager } from '@nestjs/typeorm';
 import { PagenationDTO } from 'src/dto/base.dto';
+import { UpdateUserInfoDTO } from 'src/dto/userInfo.dto';
+import { RoleInfo } from 'src/entities/rbac_db/role-info.entity';
 import { UserInfo } from 'src/entities/rbac_db/user-info.entity';
+import { UserRole } from 'src/entities/rbac_db/user-role.entity';
 import {
   EntityManager,
   FindOptionsRelationByString,
@@ -99,7 +102,7 @@ export default class UserService {
 
     const actionButtonMap = new Map();
     const actionButtons = sqlRes.userRoles.reduce((prev, userRole) => {
-      const rolePermissions = userRole.roles.rolePermissions;
+      const rolePermissions = userRole.roles?.rolePermissions;
       rolePermissions.forEach((rolePermission) => {
         const permission = rolePermission.permission;
         const permissionABs = permission.permissionABs;
@@ -127,7 +130,39 @@ export default class UserService {
     };
   }
 
-  updateUser(username: string) {}
+  async updateUser(userInfo: UpdateUserInfoDTO) {
+    let user = await this.entityManager.findOne(UserInfo, {
+      where: { id: userInfo.id },
+      relations: {
+        userRoles: true,
+      },
+    });
 
-  deleteUser(username: string) {}
+    const role = await this.entityManager.findByIds(RoleInfo, userInfo.roles);
+    let newUserRoles = role?.map((item) => {
+      return Object.assign(new UserRole(), {
+        roles: item,
+      });
+    });
+
+    await this.entityManager.remove(UserRole, user.userRoles);
+    if (userInfo.roles.length) {
+      await this.entityManager.save(UserRole, newUserRoles);
+    }
+    delete user.userRoles;
+    user = {
+      ...user,
+      ...userInfo,
+    };
+    const { id } = await this.entityManager.save(UserInfo, user, {});
+    newUserRoles = newUserRoles.map((item) => ({ ...item, users: user }));
+    if (userInfo.roles.length) {
+      await this.entityManager.save(UserRole, newUserRoles);
+    }
+    return this.getUserInfo(id);
+  }
+
+  deleteUser(ids: Array<number>) {
+    return this.entityManager.delete(UserInfo, ids);
+  }
 }

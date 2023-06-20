@@ -1,7 +1,7 @@
 import { IsNotEmpty } from 'class-validator';
 
 class PartialId {
-  id: string;
+  id: number;
 }
 
 class PagenationDTO {

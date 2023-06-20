@@ -15,7 +15,8 @@ import { ClassSerializerMysqlInterceptor } from '../interceptor/classSerializerM
 import AuthUserService from './authUser.service';
 import { comparePassword, encryptPassword } from '../utils/crypt';
 import { log } from 'console';
-
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { PartialType } from '@nestjs/mapped-types';
 @Controller({
   path: '/auth',
   scope: Scope.REQUEST,
@@ -24,6 +25,7 @@ import { log } from 'console';
   enableImplicitConversion: false,
 })
 @UseInterceptors(ClassSerializerMysqlInterceptor)
+@ApiTags('auth')
 export class AuthController {
   constructor(
     private authService: AuthService,
@@ -34,6 +36,9 @@ export class AuthController {
   @NotAuth()
   @MysqlEntityClass(AuthInfoVO)
   @Post('/login')
+  @ApiResponse({
+    type: AuthInfoVO,
+  })
   async login(@Body() loginParams: AuthLoginDTO) {
     return this.authService.loginSingToken(loginParams);
   }
