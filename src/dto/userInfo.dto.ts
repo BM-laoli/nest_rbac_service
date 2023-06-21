@@ -9,14 +9,17 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 
 class UserInfoDTO extends PartialType(PartialId) {
+  @ApiProperty()
   @IsNotEmpty({
     message: '用户名不能为空',
   })
   username: string;
 
+  @ApiProperty()
   @IsEmail({})
   email: string;
 
+  @ApiProperty()
   @IsNotEmpty({
     message: '密码不能为空',
   })

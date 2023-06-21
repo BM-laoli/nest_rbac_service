@@ -758,3 +758,115 @@ class UserInfoListVO {
 }
 
 ```
+
+# 突然发现 总有一些不完善的地方
+>
+> 由于 serilaze 并不是一个非常完善的方案，还是有一些局限性
+
+```ts
+
+// 这里是用法
+@ApiExtraModels(PagenationWrapVO, UserInfoDetailInfo)
+class UserController {
+  // -----
+
+  @Get('/users-page')
+  @NotAuth()
+  @MysqlEntityClass(UserInfoListVO)
+  @ApiPaginatedResponse(UserInfoDetailInfo)
+  async getUserList(
+    @Query() pagenation: PagenationDTO,
+  ): Promise<UserInfoListVO> {
+    const res = await this.userService.getUserList(pagenation);
+    return res;
+  }
+
+}
+
+// 这里是定义
+
+export const ApiPaginatedResponse = <TModel extends Type<any>>(
+  model: TModel,
+) => {
+  return applyDecorators(
+    ApiOkResponse({
+      schema: {
+        title: `PaginatedResponseOf_${model.name}`,
+        allOf: [
+          { $ref: getSchemaPath(PagenationWrapVO) },
+          {
+            properties: {
+              list: {
+                type: 'array',
+                items: { $ref: getSchemaPath(model) },
+              },
+            },
+          },
+        ],
+      },
+    }),
+  );
+};
+
+class PagenationVO {
+  @ApiProperty()
+  @Expose()
+  page: number;
+
+  @ApiProperty()
+  @Expose()
+  pageSize: number;
+
+  @ApiProperty()
+  @Expose()
+  total?: number;
+
+  constructor(partial: Partial<PagenationVO>) {
+    Object.assign(this, partial);
+  }
+}
+
+class PagenationWrapVO<T> {
+  @ApiProperty()
+  pageInfo: PagenationVO;
+
+  // @Type( () => T) 泛型暂时无法使用
+  @ApiProperty()
+  list: T[];
+}
+
+
+// @ApiPaginatedResponse(UserInfoDetailInfo)
+class UserInfoListVO {
+  @Expose()
+  @Type(() => PagenationVO)
+  pageInfo: PagenationVO;
+
+  @Expose()
+  @Type(() => UserInfoDetailInfo)
+  list: UserInfoDetailInfo[];
+
+  constructor(partial: Partial<UserInfoListVO>) {
+    Object.assign(this, partial);
+  }
+}
+
+class PagenationDTO {
+  @ApiProperty()
+  @IsNotEmpty()
+  page: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  pageSize: number;
+
+  @ApiProperty({
+    required: false,
+  })
+  total: number;
+}
+
+```
+
+你会发现我们的 Swager 和 我们的 serilaze 是分离的 并不是关联在一起的，但是我们的DTO 也就是 在vlidation的时候
+却可以比较好的关联, 造成这样的原因的 最大bug 就是目前这个 class-transformer class-vlidation 库不是非常的完善

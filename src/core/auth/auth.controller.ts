@@ -13,10 +13,7 @@ import { MysqlEntityClass } from '../decorators/mysqlEntityClass.decorator';
 import { AuthInfoVO } from 'src/vo/auth.vo';
 import { ClassSerializerMysqlInterceptor } from '../interceptor/classSerializerMysql.interceptor';
 import AuthUserService from './authUser.service';
-import { comparePassword, encryptPassword } from '../utils/crypt';
-import { log } from 'console';
-import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { PartialType } from '@nestjs/mapped-types';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 @Controller({
   path: '/auth',
   scope: Scope.REQUEST,
@@ -46,6 +43,9 @@ export class AuthController {
   @NotAuth()
   @MysqlEntityClass(AuthInfoVO)
   @Post('/regestier')
+  @ApiResponse({
+    type: AuthInfoVO,
+  })
   async register(@Body() userInfo: UserInfoDTO) {
     await this.authUserService.register(userInfo);
 

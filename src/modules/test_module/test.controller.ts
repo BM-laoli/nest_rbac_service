@@ -14,21 +14,20 @@ import {
   Query,
   SerializeOptions,
   UseInterceptors,
-  UsePipes,
 } from '@nestjs/common';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { ZKService } from 'src/core/zk/zk.service';
 import { MysqlEntityClass } from 'src/core/decorators/mysqlEntityClass.decorator';
 import { TestDto } from 'src/dto/tes.dto';
-import { User_db2 } from 'src/entities/rbac_db_1/te2.entity';
 
 import { VOTest, VOUserInfo } from 'src/vo/userInfo.vo';
-import { Serializer } from 'v8';
 import { TestService } from './test.service';
 import { ClassSerializerMysqlInterceptor } from 'src/core/interceptor/classSerializerMysql.interceptor';
 import { NotAuth } from 'src/core/decorators/notAuth.decorator';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('test')
+@ApiTags('test')
 export class TestController {
   constructor(
     private readonly zkConfig: ZKService,

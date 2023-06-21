@@ -5,6 +5,7 @@ import { UserRole } from 'src/entities/rbac_db/user-role.entity';
 import { User_db2 } from 'src/entities/rbac_db_1/te2.entity';
 import { PagenationVO } from './base.vo';
 import { Transaction } from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class VOTest extends User_db2 {
   @Exclude()
@@ -49,16 +50,27 @@ export class VOUserInfo extends UserInfo {
 }
 
 class UserInfoDetailInfo implements UserInfo {
+  @ApiProperty()
   @Expose()
   id: number;
+
+  @ApiProperty()
   @Expose()
   username: string;
+
+  @ApiProperty()
   @Expose()
   email: string;
+
+  @ApiProperty()
   @Expose()
   state: number;
+
+  @ApiProperty()
   @Expose()
   create_time: Date;
+
+  @ApiProperty()
   @Expose()
   update_time: Date;
 
