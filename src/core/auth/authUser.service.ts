@@ -3,7 +3,7 @@ import { InjectEntityManager } from '@nestjs/typeorm';
 import { UserInfo } from 'src/entities/rbac_db/user-info.entity';
 import { EntityManager } from 'typeorm';
 import { encryptPassword } from '../utils/crypt';
-import { UserInfoDTO } from 'src/dto/userInfo.dto';
+import { UserInfoReqDTO } from 'src/dto/request/rbac.dto';
 
 interface InterFind {
   username?: string;
@@ -84,7 +84,7 @@ export default class AuthUserService {
     };
   }
 
-  async register(user: UserInfoDTO) {
+  async register(user: UserInfoReqDTO) {
     user = {
       ...user,
       password: encryptPassword(user.password),

@@ -8,8 +8,9 @@ import { RoleInfo } from 'src/entities/rbac_db/role-info.entity';
 import { RolePermission } from 'src/entities/rbac_db/role-permission.entity';
 import { UserInfo } from 'src/entities/rbac_db/user-info.entity';
 import { UserRole } from 'src/entities/rbac_db/user-role.entity';
+import { PagenationResDTO } from './responseBase.dto';
 
-class ActionButtonVO implements ActionButton {
+class ActionButtonResDTO implements ActionButton {
   @ApiProperty()
   @Expose()
   id: number;
@@ -44,11 +45,12 @@ class ActionButtonVO implements ActionButton {
   @Exclude()
   isDeleted: boolean;
 
-  constructor(partial: Partial<ActionButtonVO>) {
+  constructor(partial: Partial<ActionButtonResDTO>) {
     Object.assign(this, partial);
   }
 }
-class MenuVO implements Menu {
+
+class MenuResDTO implements Menu {
   @ApiProperty()
   @Expose()
   id: number;
@@ -70,18 +72,18 @@ class MenuVO implements Menu {
   icon: string;
 
   @ApiProperty({
-    type: () => MenuVO,
+    type: () => MenuResDTO,
     description: '嵌套的同type',
   })
   @Expose()
-  parentMenu: MenuVO;
+  parentMenu: MenuResDTO;
 
   @Expose()
   @ApiProperty({
-    type: () => [MenuVO],
+    type: () => [MenuResDTO],
     description: '嵌套的同type',
   })
-  childMenus: MenuVO[];
+  childMenus: MenuResDTO[];
 
   @Exclude()
   permissionMenus: PermissionMenu[];
@@ -97,11 +99,12 @@ class MenuVO implements Menu {
   @ApiProperty()
   update_time: Date;
 
-  constructor(partial: Partial<MenuVO>) {
+  constructor(partial: Partial<MenuResDTO>) {
     Object.assign(this, partial);
   }
 }
-class RoleInfoVO implements RoleInfo {
+
+class RoleInfoResDTO implements RoleInfo {
   @ApiProperty()
   @Expose()
   id: number;
@@ -135,11 +138,12 @@ class RoleInfoVO implements RoleInfo {
   @Expose()
   update_time: Date;
 
-  constructor(partial: Partial<RoleInfoVO>) {
+  constructor(partial: Partial<RoleInfoResDTO>) {
     Object.assign(this, partial);
   }
 }
-class UserInfoVO implements UserInfo {
+
+class UserInfoResDTO implements UserInfo {
   @Exclude()
   password: string;
 
@@ -147,25 +151,25 @@ class UserInfoVO implements UserInfo {
   userRoles: any[];
 
   @ApiProperty({
-    type: [RoleInfoVO],
+    type: [RoleInfoResDTO],
   })
   @Expose()
-  @Type(() => RoleInfoVO)
-  roles: RoleInfoVO[];
+  @Type(() => RoleInfoResDTO)
+  roles: RoleInfoResDTO[];
 
   @ApiProperty({
-    type: [MenuVO],
+    type: [MenuResDTO],
   })
   @Expose()
-  @Type(() => MenuVO)
-  menus: MenuVO[];
+  @Type(() => MenuResDTO)
+  menus: MenuResDTO[];
 
   @ApiProperty({
-    type: [ActionButtonVO],
+    type: [ActionButtonResDTO],
   })
   @Expose()
-  @Type(() => ActionButtonVO)
-  actionButtons: ActionButtonVO[];
+  @Type(() => ActionButtonResDTO)
+  actionButtons: ActionButtonResDTO[];
 
   @Exclude()
   id: number;
@@ -180,34 +184,80 @@ class UserInfoVO implements UserInfo {
   @ApiProperty()
   username: string;
 
+  @ApiProperty()
+  @Expose()
   email: string;
 
+  @ApiProperty()
+  @Expose()
   create_time: Date;
 
+  @ApiProperty()
+  @Expose()
   update_time: Date;
 
-  constructor(partial: Partial<UserInfoVO>) {
+  constructor(partial: Partial<UserInfoResDTO>) {
     Object.assign(this, partial);
   }
 }
 
-class AuthInfoVO {
-  @ApiProperty({
-    description: 'token',
-  })
+class UserDetailResDTO implements UserInfo {
+  @ApiProperty()
   @Expose()
-  public token: string;
+  id: number;
 
+  @ApiProperty()
   @Expose()
-  @Type(() => UserInfoVO)
-  @ApiProperty({
-    type: UserInfoVO,
-  })
-  userInfo: UserInfoVO;
+  username: string;
 
-  constructor(partial: Partial<AuthInfoVO>) {
+  @ApiProperty()
+  @Expose()
+  email: string;
+
+  @ApiProperty()
+  @Expose()
+  state: number;
+
+  @ApiProperty()
+  @Expose()
+  create_time: Date;
+
+  @ApiProperty()
+  @Expose()
+  update_time: Date;
+
+  @Exclude()
+  password: string;
+  @Exclude()
+  userRoles: UserRole[];
+  @Exclude()
+  isDeleted: boolean;
+
+  constructor(partial: Partial<UserDetailResDTO>) {
     Object.assign(this, partial);
   }
 }
 
-export { AuthInfoVO, UserInfoVO };
+// 非常特殊的 class 他和 自定义的sawger 装饰器需要结合使用 才能保证效果
+class UserInfoListResDTO {
+  @Expose()
+  @Type(() => PagenationResDTO)
+  pageInfo: PagenationResDTO;
+
+  @Expose()
+  @Type(() => UserDetailResDTO)
+  list: UserDetailResDTO[];
+
+  constructor(partial: Partial<UserInfoListResDTO>) {
+    Object.assign(this, partial);
+  }
+}
+
+export {
+  UserInfoListResDTO,
+  UserDetailResDTO,
+  UserInfoResDTO,
+  ActionButtonResDTO,
+  MenuResDTO,
+  RoleInfoResDTO,
+};

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectEntityManager } from '@nestjs/typeorm';
-import { PagenationDTO } from 'src/dto/base.dto';
-import { UpdateUserInfoDTO } from 'src/dto/userInfo.dto';
+import { UpdateUserInfoReqDTO } from 'src/dto/request/rbac.dto';
+import { PagenationReqDTO } from 'src/dto/request/requestBase.dto';
 import { RoleInfo } from 'src/entities/rbac_db/role-info.entity';
 import { UserInfo } from 'src/entities/rbac_db/user-info.entity';
 import { UserRole } from 'src/entities/rbac_db/user-role.entity';
@@ -51,7 +51,7 @@ export default class UserService {
     private entityManager: EntityManager,
   ) {}
 
-  async getUserList(pageInfo: PagenationDTO) {
+  async getUserList(pageInfo: PagenationReqDTO) {
     const res = await DoPagenation<UserInfo>(
       pageInfo,
       this.entityManager,
@@ -130,7 +130,7 @@ export default class UserService {
     };
   }
 
-  async updateUser(userInfo: UpdateUserInfoDTO) {
+  async updateUser(userInfo: UpdateUserInfoReqDTO) {
     let user = await this.entityManager.findOne(UserInfo, {
       where: { id: userInfo.id },
       relations: {

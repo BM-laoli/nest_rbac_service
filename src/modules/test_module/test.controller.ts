@@ -18,9 +18,8 @@ import {
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { ZKService } from 'src/core/zk/zk.service';
 import { MysqlEntityClass } from 'src/core/decorators/mysqlEntityClass.decorator';
-import { TestDto } from 'src/dto/tes.dto';
+import { TestDto, VOTest, VOUserInfo } from 'src/dto/tes.dto';
 
-import { VOTest, VOUserInfo } from 'src/vo/userInfo.vo';
 import { TestService } from './test.service';
 import { ClassSerializerMysqlInterceptor } from 'src/core/interceptor/classSerializerMysql.interceptor';
 import { NotAuth } from 'src/core/decorators/notAuth.decorator';

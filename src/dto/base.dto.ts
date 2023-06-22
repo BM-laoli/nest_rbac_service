@@ -1,24 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, ValidateNested } from 'class-validator';
+import { Expose } from 'class-transformer';
+import { IsNotEmpty } from 'class-validator';
 
-class PartialId {
-  @ApiProperty()
-  id: number;
-}
-
-class PagenationDTO {
-  @ApiProperty()
-  @IsNotEmpty()
-  page: number;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  pageSize: number;
-
+class PartialIdDTO {
   @ApiProperty({
     required: false,
   })
-  total: number;
+  id?: number;
 }
 
-export { PartialId, PagenationDTO };
+export { PartialIdDTO };
