@@ -9,6 +9,7 @@ import { RolePermission } from 'src/entities/rbac_db/role-permission.entity';
 import { UserInfo } from 'src/entities/rbac_db/user-info.entity';
 import { UserRole } from 'src/entities/rbac_db/user-role.entity';
 import { PagenationResDTO } from './responseBase.dto';
+import { Permission } from 'src/entities/rbac_db/permission.entity';
 
 class ActionButtonResDTO implements ActionButton {
   @ApiProperty()
@@ -71,19 +72,16 @@ class MenuResDTO implements Menu {
   @Expose()
   icon: string;
 
-  @ApiProperty({
-    type: () => MenuResDTO,
-    description: '嵌套的同type',
-  })
-  @Expose()
-  parentMenu: MenuResDTO;
-
   @Expose()
   @ApiProperty({
     type: () => [MenuResDTO],
     description: '嵌套的同type',
   })
+  @Type(() => MenuResDTO)
   childMenus: MenuResDTO[];
+
+  @Exclude()
+  parentMenu: MenuResDTO;
 
   @Exclude()
   permissionMenus: PermissionMenu[];
@@ -103,10 +101,9 @@ class MenuResDTO implements Menu {
     Object.assign(this, partial);
   }
 }
-
 class RoleInfoResDTO implements RoleInfo {
   @ApiProperty()
-  @Expose()
+  @Exclude()
   id: number;
 
   @ApiProperty()
@@ -228,12 +225,69 @@ class UserDetailResDTO implements UserInfo {
 
   @Exclude()
   password: string;
+
   @Exclude()
   userRoles: UserRole[];
+
   @Exclude()
   isDeleted: boolean;
 
   constructor(partial: Partial<UserDetailResDTO>) {
+    Object.assign(this, partial);
+  }
+}
+
+class RoleDetailResDTO implements RoleInfo {
+  @ApiProperty()
+  @Expose()
+  id: number;
+
+  @ApiProperty()
+  @Expose()
+  name: string;
+
+  @ApiProperty()
+  @Expose()
+  icon: string;
+
+  @ApiProperty()
+  @Expose()
+  description: string;
+
+  @ApiProperty()
+  @Expose()
+  create_time: Date;
+
+  @ApiProperty()
+  @Expose()
+  update_time: Date;
+
+  // 自实现
+  @ApiProperty({
+    type: [MenuResDTO],
+  })
+  @Expose()
+  @Type(() => MenuResDTO)
+  menus: MenuResDTO[];
+
+  @ApiProperty({
+    type: [ActionButtonResDTO],
+  })
+  @Expose()
+  @Type(() => ActionButtonResDTO)
+  actionButtons: ActionButtonResDTO[];
+
+  // 忽略
+  @Exclude()
+  rolePermissions: RolePermission[];
+
+  @Exclude()
+  userRoles: UserRole[];
+
+  @Exclude()
+  isDeleted: boolean;
+
+  constructor(partial: Partial<RoleDetailResDTO>) {
     Object.assign(this, partial);
   }
 }
@@ -253,11 +307,145 @@ class UserInfoListResDTO {
   }
 }
 
+class RoleInfoListResDTO {
+  @Expose()
+  @Type(() => PagenationResDTO)
+  pageInfo: PagenationResDTO;
+
+  @Expose()
+  @Type(() => RoleInfoResDTO)
+  list: RoleInfoResDTO[];
+
+  constructor(partial: Partial<RoleInfoListResDTO>) {
+    Object.assign(this, partial);
+  }
+}
+
+class ActionButtonListResDTO {
+  @Expose()
+  @Type(() => PagenationResDTO)
+  pageInfo: PagenationResDTO;
+
+  @Expose()
+  @Type(() => ActionButtonResDTO)
+  list: ActionButtonResDTO[];
+
+  constructor(partial: Partial<ActionButtonListResDTO>) {
+    Object.assign(this, partial);
+  }
+}
+
+class PermissionResDTO {
+  @ApiProperty()
+  @Expose()
+  id: number;
+
+  @ApiProperty()
+  @Expose()
+  name: string;
+
+  @ApiProperty()
+  @Expose()
+  description: string;
+
+  @ApiProperty()
+  @Expose()
+  create_time: Date;
+
+  @ApiProperty()
+  @Expose()
+  update_time: Date;
+
+  @ApiProperty({
+    type: [RoleInfoResDTO],
+  })
+  @Expose()
+  @Type(() => RoleInfoResDTO)
+  roles: RoleInfoResDTO[];
+
+  @ApiProperty({
+    type: [ActionButtonResDTO],
+  })
+  @Expose()
+  @Type(() => ActionButtonResDTO)
+  actionButtons: ActionButtonResDTO[];
+
+  @ApiProperty({
+    type: [MenuResDTO],
+  })
+  @Expose()
+  @Type(() => MenuResDTO)
+  menus: MenuResDTO[];
+
+  @Exclude()
+  isDeleted: boolean;
+  constructor(partial: Partial<PermissionResDTO>) {
+    Object.assign(this, partial);
+  }
+
+  @Exclude()
+  rolePermissions: any[];
+
+  @Exclude()
+  permissionMenus: any[];
+
+  @Exclude()
+  permissionABs: any[];
+}
+
+class PermissionSimpleResDTO {
+  @ApiProperty()
+  @Expose()
+  id: number;
+
+  @ApiProperty()
+  @Expose()
+  name: string;
+
+  @ApiProperty()
+  @Expose()
+  description: string;
+
+  @ApiProperty()
+  @Expose()
+  create_time: Date;
+
+  @ApiProperty()
+  @Expose()
+  update_time: Date;
+
+  @Exclude()
+  isDeleted: boolean;
+  constructor(partial: Partial<PermissionListResDTO>) {
+    Object.assign(this, partial);
+  }
+}
+
+class PermissionListResDTO {
+  @Expose()
+  @Type(() => PagenationResDTO)
+  pageInfo: PagenationResDTO;
+
+  @Expose()
+  @Type(() => PermissionSimpleResDTO)
+  list: PermissionSimpleResDTO[];
+
+  constructor(partial: Partial<PermissionListResDTO>) {
+    Object.assign(this, partial);
+  }
+}
+
 export {
   UserInfoListResDTO,
   UserDetailResDTO,
+  RoleInfoListResDTO,
   UserInfoResDTO,
   ActionButtonResDTO,
   MenuResDTO,
   RoleInfoResDTO,
+  RoleDetailResDTO,
+  ActionButtonListResDTO,
+  PermissionResDTO,
+  PermissionSimpleResDTO,
+  PermissionListResDTO,
 };

@@ -3,6 +3,9 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
+  Inject,
   Param,
   ParseArrayPipe,
   ParseIntPipe,
@@ -27,6 +30,7 @@ import {
 } from 'src/dto/response/rbac.dto';
 import { PagenationReqDTO } from 'src/dto/request/requestBase.dto';
 import { UpdateUserInfoReqDTO } from 'src/dto/request/rbac.dto';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 @Controller({
   path: '/user',
@@ -39,39 +43,64 @@ import { UpdateUserInfoReqDTO } from 'src/dto/request/rbac.dto';
 })
 @UseInterceptors(ClassSerializerMysqlInterceptor)
 export default class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    @Inject(WINSTON_MODULE_NEST_PROVIDER)
+    private readonly logger,
+  ) {}
+
+  throwError(message: string, httpCode: HttpStatus) {
+    throw new HttpException(
+      {
+        status: httpCode,
+        error: message,
+      },
+      httpCode,
+    );
+  }
 
   @Get('/users-page')
-  @NotAuth()
   @MysqlEntityClass(UserInfoListResDTO)
   @ApiPaginatedResponse(UserDetailResDTO)
   async getUserList(
     @Query() pagenation: PagenationReqDTO,
   ): Promise<UserInfoListResDTO> {
-    const res = await this.userService.getUserList(pagenation);
-    return res;
+    try {
+      const res = await this.userService.getUserList(pagenation);
+      return res;
+    } catch (error) {
+      this.logger.error(JSON.stringify(error));
+      this.throwError('查询失败', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @Get('/user-info/:id')
-  @NotAuth()
   @MysqlEntityClass(UserInfoResDTO)
   @ApiResponse({
     type: UserInfoResDTO,
   })
   getUserInfo(@Param('id', ParseIntPipe) id: number) {
-    return this.userService.getUserInfo(id);
+    try {
+      return this.userService.getUserInfo(id);
+    } catch (error) {
+      this.logger.error(JSON.stringify(error));
+      this.throwError('查询失败', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @Put('/update-user')
-  @NotAuth()
   @MysqlEntityClass(UserInfoResDTO)
   @ApiResponse({ type: UserInfoResDTO })
   updateUser(@Body() userInfo: UpdateUserInfoReqDTO) {
-    return this.userService.updateUser(userInfo);
+    try {
+      return this.userService.updateUser(userInfo);
+    } catch (error) {
+      this.logger.error(JSON.stringify(error));
+      this.throwError('更新失败', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @Delete('/delete-user')
-  @NotAuth()
   @MysqlEntityClass(null)
   deleteUser(
     @Query(
@@ -83,6 +112,11 @@ export default class UserController {
     )
     ids: number[],
   ) {
-    return this.userService.deleteUser(ids);
+    try {
+      return this.userService.deleteUser(ids);
+    } catch (error) {
+      this.logger.error(JSON.stringify(error));
+      this.throwError('删除失败', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

@@ -870,3 +870,39 @@ class PagenationDTO {
 
 你会发现我们的 Swager 和 我们的 serilaze 是分离的 并不是关联在一起的，但是我们的DTO 也就是 在vlidation的时候
 却可以比较好的关联, 造成这样的原因的 最大bug 就是目前这个 class-transformer class-vlidation 库不是非常的完善
+
+# 关于规范
+
+## 编码流程
+
+1. 先分析你需要的结构
+2. 编码 DTO (Swager Serilaze Vlidation)
+2. 实现API Service
+
+## DTO 请按照结构进行分放
+
+## 错误处理
+>
+> 如果是要返回给出去的 错误  请统一放到 controller 层
+
+## 一个参数的时候swwager DTO 没法... 做可选操作
+
+```ts
+
+  @Get('/all')
+  @NotAuth()
+  // @MysqlEntityClass(MenuInfoResDTO)
+  @ApiResponse({
+    type: MenuInfoResDTO,
+  })
+  // 这个值必选传 但是我们把 -1 当做不存在的查询条件 
+  // 换句话说 只有一个值得时候 ParseIntPipe 没办法做可选
+  getAllACB(@Query('parentId', ParseIntPipe) parentId?: number) {
+    try {
+      return this.menuService.getAllMenus(18);
+    } catch (error) {
+      this.logger.error(JSON.stringify(error));
+      this.throwError('查询失败', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+```

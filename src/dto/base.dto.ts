@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
-import { IsNotEmpty } from 'class-validator';
+import { IsNumber } from 'class-validator';
 
 class PartialIdDTO {
   @ApiProperty({
@@ -8,5 +8,4 @@ class PartialIdDTO {
   })
   id?: number;
 }
-
 export { PartialIdDTO };

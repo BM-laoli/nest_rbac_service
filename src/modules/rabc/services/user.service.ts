@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectEntityManager } from '@nestjs/typeorm';
+import { DoPagenation } from 'src/core/utils/pagenation';
 import { UpdateUserInfoReqDTO } from 'src/dto/request/rbac.dto';
 import { PagenationReqDTO } from 'src/dto/request/requestBase.dto';
 import { RoleInfo } from 'src/entities/rbac_db/role-info.entity';
@@ -13,37 +14,6 @@ import {
   getRepository,
 } from 'typeorm';
 
-interface PageInfo {
-  page: number;
-  pageSize: number;
-  total?: number;
-}
-
-const DoPagenation = async <T>(
-  pageInfo: PageInfo,
-  entityManager: EntityManager,
-  repository,
-  where?: FindOptionsWhere<T>,
-  relations?: FindOptionsRelationByString | FindOptionsRelations<T>,
-) => {
-  const { page, pageSize } = pageInfo;
-  const repositoryValue = entityManager.getRepository<T>(repository);
-  const [list, total] = await repositoryValue.findAndCount({
-    skip: (page - 1) * pageSize,
-    take: pageSize,
-    where: where,
-    relations: relations,
-  });
-  const pageInfoRes: PageInfo = {
-    page: Number(page),
-    pageSize: Number(pageSize),
-    total: Number(total),
-  };
-  return {
-    list,
-    pageInfo: pageInfoRes,
-  };
-};
 @Injectable()
 export default class UserService {
   constructor(

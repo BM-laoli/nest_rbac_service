@@ -9,10 +9,10 @@ export class Permission extends Base {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: true })
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   description: string;
 
   // 虚拟键
