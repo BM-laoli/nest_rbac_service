@@ -17,7 +17,12 @@ import {
   SerializeOptions,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiExtraModels,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ClassSerializerMysqlInterceptor } from 'src/core/interceptor/classSerializerMysql.interceptor';
 import { PagenationWrapResDTO } from 'src/dto/response/responseBase.dto';
 import PermissionService from '../services/permission.service';
@@ -43,6 +48,7 @@ import { ApiPaginatedResponse } from 'src/core/decorators/ApiPaginatedResponse.d
 @SerializeOptions({
   enableImplicitConversion: false,
 })
+@ApiBearerAuth()
 @UseInterceptors(ClassSerializerMysqlInterceptor)
 export default class PermissionController {
   constructor(

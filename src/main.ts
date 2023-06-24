@@ -51,6 +51,7 @@ async function bootstrap() {
     .setDescription('This is RBAS Service Nestjs API description')
     .setVersion('1.0')
     .addTag('最佳实践')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api-doc', app, document);

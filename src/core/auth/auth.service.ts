@@ -6,6 +6,10 @@ import { CacheService } from '../cache/cache.service';
 import { UserInfo } from 'src/entities/rbac_db/user-info.entity';
 import AuthUserService from './authUser.service';
 
+export interface InterPayload {
+  username: string;
+  sub: number;
+}
 @Injectable()
 export class AuthService {
   constructor(
@@ -65,7 +69,7 @@ export class AuthService {
 
   // JWT验证 - Step 3: 处理 jwt 签证
   async certificate(user: UserInfo) {
-    const payload = {
+    const payload: InterPayload = {
       username: user.username,
       sub: user.id,
     };
@@ -100,5 +104,9 @@ export class AuthService {
       },
       HttpStatus.FORBIDDEN,
     );
+  }
+
+  decodeToken(token: string): InterPayload {
+    return this.jwtService.decode(token) as InterPayload;
   }
 }

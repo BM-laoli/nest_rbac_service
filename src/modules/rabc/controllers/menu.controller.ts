@@ -17,7 +17,12 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import MenuService from '../services/menu.service';
-import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiExtraModels,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ClassSerializerMysqlInterceptor } from 'src/core/interceptor/classSerializerMysql.interceptor';
 import { PagenationWrapResDTO } from 'src/dto/response/responseBase.dto';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
@@ -36,6 +41,7 @@ import { MenuCreateReqDTO } from 'src/dto/request/rbac.dto';
 @SerializeOptions({
   enableImplicitConversion: false,
 })
+@ApiBearerAuth()
 @UseInterceptors(ClassSerializerMysqlInterceptor)
 export default class MenuController {
   constructor(

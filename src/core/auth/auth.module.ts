@@ -1,5 +1,5 @@
 import { Global, Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { CacheService } from '../cache/cache.service';
 import { AuthController } from './auth.controller';
@@ -8,6 +8,7 @@ import { JwtStrategy } from './jwt.strategy';
 import { ZKService } from '../zk/zk.service';
 import AuthUserService from './authUser.service';
 
+@Global()
 @Module({
   imports: [
     PassportModule,
@@ -18,6 +19,7 @@ import AuthUserService from './authUser.service';
         );
         return {
           secret: auth.secret,
+          global: true,
           signOptions: { expiresIn: auth.expiresIn },
         };
       },
@@ -26,6 +28,6 @@ import AuthUserService from './authUser.service';
   ],
   controllers: [AuthController],
   providers: [AuthUserService, AuthService, JwtStrategy, CacheService],
-  exports: [AuthService],
+  exports: [AuthService, AuthUserService],
 })
 export class AuthModule {}

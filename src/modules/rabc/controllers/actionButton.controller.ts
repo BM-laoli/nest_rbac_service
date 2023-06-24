@@ -15,10 +15,16 @@ import {
   Query,
   Scope,
   SerializeOptions,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import ACBService from '../services/acb.service';
-import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiExtraModels,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ClassSerializerMysqlInterceptor } from 'src/core/interceptor/classSerializerMysql.interceptor';
 import { PagenationWrapResDTO } from 'src/dto/response/responseBase.dto';
 import { PagenationReqDTO } from 'src/dto/request/requestBase.dto';
@@ -31,6 +37,8 @@ import {
 import { NotAuth } from 'src/core/decorators/notAuth.decorator';
 import { ApiPaginatedResponse } from 'src/core/decorators/ApiPaginatedResponse.decorator';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { RoleGuard } from 'src/core/guard/rbac.guard';
+import { Role, Roles } from 'src/core/decorators/rbac.decorator';
 
 @Controller({
   path: '/acb',
@@ -41,6 +49,10 @@ import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 @SerializeOptions({
   enableImplicitConversion: false,
 })
+@ApiBearerAuth()
+// @Roles(Role.Admin)
+@Roles(Role.Guset)
+@UseGuards(RoleGuard)
 @UseInterceptors(ClassSerializerMysqlInterceptor)
 export default class ACBController {
   constructor(

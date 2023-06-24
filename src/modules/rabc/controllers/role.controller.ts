@@ -19,7 +19,12 @@ import {
 import RoleService from '../services/role.service';
 import { NotAuth } from 'src/core/decorators/notAuth.decorator';
 import { MysqlEntityClass } from 'src/core/decorators/mysqlEntityClass.decorator';
-import { ApiPropertyOptional, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiPropertyOptional,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { PagenationReqDTO } from 'src/dto/request/requestBase.dto';
 import { ApiPaginatedResponse } from 'src/core/decorators/ApiPaginatedResponse.decorator';
 import {
@@ -40,6 +45,7 @@ import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 @SerializeOptions({
   enableImplicitConversion: false,
 })
+@ApiBearerAuth()
 @UseInterceptors(ClassSerializerMysqlInterceptor)
 export default class RoleController {
   constructor(

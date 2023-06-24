@@ -906,3 +906,71 @@ class PagenationDTO {
     }
   }
 ```
+
+# 调试手册
+
+## 关闭Auth 验证
+
+如果你希望暂时关闭Auth 你需要做下面的两件事
+
+```ts
+// coreModule 中消除引用
+  @Module({
+  imports: [
+    CacheModule,
+    // AuthModule,
+  ],
+  controllers: [],
+})
+
+
+// appModule 消除装Auth providers
+@Module({
+  imports: [CoreModule, TestModule, RBACModule],
+  controllers: [],
+  providers: [
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: NotAuthGuard,
+    // },
+  ],
+})
+```
+
+# 关于swager 的token 问题
+>
+> 使用我的这个工程骨架 只需要 + 下面的代码就可以完全安全且可用
+
+```ts
+// + main.ts
+  const config = new DocumentBuilder()
+    .setTitle('RBAC Service Nestjs API ')
+    .setDescription('This is RBAS Service Nestjs API description')
+    .setVersion('1.0')
+    .addTag('最佳实践')
+    .addBearerAuth() // this
+    .build();
+
+// + api controller
+@Controller({
+  path: '/acb',
+  scope: Scope.REQUEST,
+})
+@ApiExtraModels(PagenationWrapResDTO)
+@ApiTags('acb')
+@SerializeOptions({
+  enableImplicitConversion: false,
+})
+@ApiBearerAuth()
+@UseInterceptors(ClassSerializerMysqlInterceptor)
+export default class ACBController {
+  // ......
+}
+```
+
+# 关于RBAC 的方案
+>
+> 我们有两种方式  
+>
+> 1. 简单的RBAC (<https://juejin.cn/post/7230012114600886309#heading-6>)
+> 2 另一种RBAC 基于 Claims-based authorization  <https://juejin.cn/post/7231860080471523384>

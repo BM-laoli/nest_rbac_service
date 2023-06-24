@@ -103,7 +103,7 @@ class MenuResDTO implements Menu {
 }
 class RoleInfoResDTO implements RoleInfo {
   @ApiProperty()
-  @Exclude()
+  @Expose()
   id: number;
 
   @ApiProperty()

@@ -20,7 +20,12 @@ import UserService from '../services/user.service';
 import { ClassSerializerMysqlInterceptor } from 'src/core/interceptor/classSerializerMysql.interceptor';
 import { MysqlEntityClass } from 'src/core/decorators/mysqlEntityClass.decorator';
 import { NotAuth } from 'src/core/decorators/notAuth.decorator';
-import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiExtraModels,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ApiPaginatedResponse } from 'src/core/decorators/ApiPaginatedResponse.decorator';
 import { PagenationWrapResDTO } from 'src/dto/response/responseBase.dto';
 import {
@@ -31,6 +36,7 @@ import {
 import { PagenationReqDTO } from 'src/dto/request/requestBase.dto';
 import { UpdateUserInfoReqDTO } from 'src/dto/request/rbac.dto';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { encryptPassword } from 'src/core/utils/crypt';
 
 @Controller({
   path: '/user',
@@ -41,6 +47,7 @@ import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 @SerializeOptions({
   enableImplicitConversion: false,
 })
+@ApiBearerAuth()
 @UseInterceptors(ClassSerializerMysqlInterceptor)
 export default class UserController {
   constructor(
@@ -93,6 +100,7 @@ export default class UserController {
   @ApiResponse({ type: UserInfoResDTO })
   updateUser(@Body() userInfo: UpdateUserInfoReqDTO) {
     try {
+      userInfo.password = encryptPassword(userInfo.password);
       return this.userService.updateUser(userInfo);
     } catch (error) {
       this.logger.error(JSON.stringify(error));

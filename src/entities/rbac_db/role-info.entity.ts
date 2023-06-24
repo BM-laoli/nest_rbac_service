@@ -16,7 +16,9 @@ export class RoleInfo extends Base {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({
+    unique: true,
+  })
   name: string;
 
   @Column()

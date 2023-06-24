@@ -15,6 +15,7 @@ import {
 import * as DailyRotateFile from 'winston-daily-rotate-file';
 import { AuthModule } from './auth/auth.module';
 import { CacheModule } from './cache/cache.module';
+import { RoleGuard } from './guard/rbac.guard';
 
 @Global()
 @Module({
@@ -61,6 +62,6 @@ import { CacheModule } from './cache/cache.module';
     CacheModule,
     AuthModule,
   ],
-  providers: [],
+  providers: [RoleGuard],
 })
 export class CoreModule {}
