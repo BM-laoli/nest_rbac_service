@@ -974,3 +974,9 @@ export default class ACBController {
 >
 > 1. 简单的RBAC (<https://juejin.cn/post/7230012114600886309#heading-6>)
 > 2 另一种RBAC 基于 Claims-based authorization  <https://juejin.cn/post/7231860080471523384>
+
+
+# 最后对于这些TypeOrm我想说的
+> 在Nestjs中，或者说不仅仅是Nestjs还是其他的Nodejs框架或者说 不是Nodejs框架，这些TypeOrm 有时候还是很鸡肋，表关联和字段关联，对后续的扩展和后续的写法带来了一定的麻烦
+>
+> 在Newegg 我们的实践 大部分使用的SqlService 和Mysql 我们不会建立很多关联的外键 而仅仅是 存储Int 类型的ID，这对我们的业务扩张有很多的益。
