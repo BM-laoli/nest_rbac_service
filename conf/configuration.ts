@@ -13,7 +13,8 @@ export const config: RBAC_Service = {
     database: db,
     RESTAPI: RESTAPI,
     RedisConfig: {
-      host: '192.168.101.2',
+      // host: '192.168.101.2',
+      host: '192.168.0.106',
       // host: 'localhost',
       port: 6379,
       db: 0,

@@ -120,4 +120,10 @@ export class TestController {
   async t5() {
     return this.tsService.setRedis();
   }
+
+  @Get('/t6')
+  @NotAuth()
+  async t6() {
+    return this.tsService.queryBuilderTest();
+  }
 }

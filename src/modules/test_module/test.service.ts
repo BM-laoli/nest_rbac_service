@@ -523,4 +523,26 @@ export class TestService {
   async setRedis() {
     return this.cacheService.set('testKey', '12313123', 4000);
   }
+
+  // queryBuilder
+  async queryBuilderTest() {
+    const query = `
+      SELECT * FROM user_info 
+        WHERE username = ?;
+    `;
+    // const inset = `
+    // INSERT INTO user_info (isDeleted, username, email, \`password\`, state) VALUE
+    // ( 1,'laoli1','a@emaul.com','123',0 );
+    // `;
+    const value = await this.userInfoRepository.query(query, ['joeny']);
+    // const value = await this.userInfoRepository.query(inset, ['joeny']);
+
+    // 如果你需要设置成 Entity 请自行转化, 当然啦 这一代点哇我们完全可以从 SQL review中
+    // 提前预防和设计
+    const EntityValue = this.userInfoRepository.create(value[0]);
+    console.log('EntityValue -->', EntityValue);
+
+    console.log('value -->', value);
+    return value;
+  }
 }
