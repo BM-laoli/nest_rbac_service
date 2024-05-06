@@ -4,7 +4,7 @@ type AuthInfo = {
 };
 
 type ConfigDBType = {
-  mysql: Array<ConfigDBMYSQL>;
+  mysql_sys_iam: ConfigDBMYSQL;
   mongo?: any;
 };
 
@@ -47,4 +47,4 @@ type Config = {
   };
 };
 
-export { Config, ConfigDBMYSQL };
+export { Config, ConfigDBMYSQL, ConfigDBType };

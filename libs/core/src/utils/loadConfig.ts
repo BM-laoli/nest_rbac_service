@@ -4,6 +4,7 @@ import { readFileSync } from 'fs';
 const loadConfig = (sysName: string) => {
   const path_info = (basepath, nodepath) =>
     `./apps/${sysName}/src/config/${basepath}/${nodepath}`;
+  // TODO: 这个path_info 要改一下，因为我们不再是用 webpack去编译了
   const loadEnv = process.env.ENV;
   const pathName = resolve(path_info(loadEnv, 'settings.json'));
   const value = readFileSync(pathName, 'utf-8');

@@ -6,7 +6,7 @@ import { config } from './config';
 import { ZKModule, ZKService } from '@app/core/modules';
 import { Setting } from '@app/core/types';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigDBMYSQL } from './types';
+import { ConfigDBType } from './types';
 import { resolve } from 'path';
 import { ConnectionOptions } from 'typeorm';
 
@@ -26,24 +26,25 @@ import { ConnectionOptions } from 'typeorm';
       inject: [ConfigService],
     }),
     TypeOrmModule.forRootAsync({
+      name: 'sys_iam', // @TODO: 太多魔法字符串
       useFactory: async (zkService: ZKService) => {
-        const config = await zkService.getConfig<ConfigDBMYSQL>('Database');
-        console.log('config', config);
+        const config_res = await zkService.getConfig<ConfigDBType>('Database');
+        const config = config_res.mysql_sys_iam;
         const options: ConnectionOptions = {
           type: 'mysql',
-          name: config.name,
-          host: '127.0.0.1',
+          // name: 'sys_iam', // 此name 非 上面的name 这是两个不一样的东西！
+          host: config.host,
           port: config.port,
           username: config.username,
           password: config.password,
           database: config.database,
           entities: [
-            // resolve(
-            //   __dirname,
-            //   `../../entities/${config.name}/**/*.entity{.ts,.js}`,
-            // ),
+            resolve(
+              __dirname,
+              `./entities/${config.name}/**/*.entity{.ts,.js}`,
+            ),
           ], // 扫描本项目中.entity.ts或者.entity.js的文件
-          synchronize: true,
+          synchronize: config.synchronize,
         };
         return options;
       },

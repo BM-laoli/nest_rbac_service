@@ -14,6 +14,7 @@
 6. 迁移 Core统一Error Res 模块
 6.1 重点！ typeOrm的 Res 统一和验证 - swagger 迁移
 7. 迁移 CoreAuth 模块
+7.1 迁移 CoreLog 模块
 
 8. resource 业务
 9. iam 业务
@@ -122,7 +123,41 @@ this.zkService.getConfig('AuthInfo').then(v => {
 
 ### 迁移 CoreMysql Log
 
-所有的内容都不应该作为黑盒子，而是应该交给外部使用，所以我没必要对这个东西进行封装
+所有的内容都不应该作为黑盒子，而是应该交给外部使用，所以我没必要对这个东西进行封装。直接用
+```ts
+ TypeOrmModule.forRootAsync({
+      useFactory: async (zkService: ZKService) => {
+        const config = await zkService.getConfig<ConfigDBMYSQL>('Database');
+        const options: ConnectionOptions = {
+          type: 'mysql',
+          name: config.name,
+          host: config.host,
+          port: config.port,
+          username: config.username,
+          password: config.password,
+          database: config.database,
+          entities: [
+            // resolve(
+            //   __dirname,
+            //   `../../entities/${config.name}/**/*.entity{.ts,.js}`,
+            // ),
+          ], // 扫描本项目中.entity.ts或者.entity.js的文件
+          synchronize: config.synchronize,
+        };
+        return options;
+      },
+      inject: [ZKService],
+    }),
+```
+
+注意db的用户 主机 名称应该是 % 而不是指定 ip哈！
+```sql
+CREATE USER `joney`@`%`; ✅
+
+CREATE USER `joney`@`localhost`; 就是错的❌
+```
+
+在迁移的过程中发现实在是太多的魔法字符串了，需想办法归纳起来！@TODO:
 
 
 ### 迁移 CoreRedis Log

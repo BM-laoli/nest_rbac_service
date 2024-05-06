@@ -1,5 +1,5 @@
 {
-  "mysql": [
+  "mysql_sys_iam":
     {
       "name": "sys_iam",
       "host": "localhost",
@@ -9,5 +9,4 @@
       "database": "sys_iam",
       "synchronize": false
     }
-  ]
 }

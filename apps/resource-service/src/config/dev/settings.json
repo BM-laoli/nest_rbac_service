@@ -9,7 +9,7 @@
     },
     {
       "node":"AuthInfo",
-      "type": "remote",
+      "type": "local",
       "value": "/AuthInfo.json"
     },
     {
