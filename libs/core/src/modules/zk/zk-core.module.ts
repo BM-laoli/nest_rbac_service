@@ -68,13 +68,6 @@ export class ZKCoreModule implements OnModuleDestroy {
         return ZKCoreModule.zookeeperClient;
       };
 
-      // 如果是 dev 请使用本地配置文件
-      if (config.env === 'DEV') {
-        ZKLocalConfig.localConfig = config.localConfig;
-        return ZKLocalConfig;
-      }
-
-      // remote 时的配置
       ZKCoreModule.zookeeperClient = await getClient({
         url: config.zkHost,
       });

@@ -1,0 +1,13 @@
+{
+  "mysql": [
+    {
+      "name": "sys_iam",
+      "host": "localhost",
+      "port": 3306,
+      "username": "joney",
+      "password": "123456",
+      "database": "sys_iam",
+      "synchronize": false
+    }
+  ]
+}

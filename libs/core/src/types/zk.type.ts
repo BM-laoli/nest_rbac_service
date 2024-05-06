@@ -1,9 +1,8 @@
 import { ModuleMetadata, Provider, Type } from '@nestjs/common';
 
 export type ZkConfigModuleOptions = {
-  env: 'DEV' | 'Staging' | 'PRD';
   zkHost: string;
-  localConfig: any;
+  localConfig?: any;
 };
 
 interface ZKModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'> {

@@ -3,8 +3,8 @@
 
 重要说明！开源万岁🎉 ，本项目遵守 MIT 开源协议，请自觉并尊重开源事业，不要二次兜售！🙅
 
-
-# TodoAndFeature
+# V1.0
+## TodoAndFeature
 
 1. 重置整个项目工程架构
 2. 迁移 CoreZk 模块
@@ -26,3 +26,111 @@
 15. 关于 TRPC/gRPC 的集成 办法 
 15.1. 如何设计 Service-Client 和 业务 MicroService
 
+### 迁移 CoreZk Log
+
+zk 安装文档？(我用单机Docker)
+https://www.cnblogs.com/LUA123/p/11428113.html
+
+客户端安装文档？
+https://github.com/vran-dev/PrettyZoo/releases
+
+客户端安装失败怎么操作？
+https://blog.csdn.net/Xurui_Luo/article/details/107908238
+
+redis 安装教程
+https://www.runoob.com/docker/docker-install-redis.html
+
+
+config结构
+```ts
+type AuthInfo = {
+  secret: string;
+  expiresIn: string;
+};
+
+type ConfigDBType = {
+  mysql: Array<ConfigDBMYSQL>;
+  mongo?: any;
+};
+
+type ConfigDBMYSQL = {
+  name: string;
+  host: string;
+  port: number;
+  username: string;
+  password: string;
+  database: string;
+  synchronize: boolean;
+};
+
+type RedisConfig = {
+  host: string;
+  password: string;
+  db: number;
+  port: number;
+  family: number;
+};
+
+type RESTAPI = {
+  a: {
+    b: {
+      c: {
+        d: {
+          name: string;
+        };
+      };
+    };
+  };
+};
+
+type Config = {
+  ResourceService: {
+    Database: ConfigDBType;
+    RESTAPI: RESTAPI;
+    AuthInfo?: AuthInfo;
+    RedisConfig?: RedisConfig;
+  };
+};
+
+export { Config };
+
+```
+
+由于我们将公共能力剥离到了core中，所以我们把module的注册逻辑放到 core中，而是采取 谁用谁取的原则 比如 zkModule
+
+获取值的时候注意了
+```ts
+// 默认获取的时候只获取 nodeName 不要获取里面具体的值
+  getConfig = async <T>(path): Promise<T> => {
+    
+    const res = (await this.getData(path)) as any;
+    return JSON.parse(res);
+  };
+```
+
+现在你只需要这样使用就好了
+```ts
+this.zkService.getConfig('AuthInfo').then(v => {
+      console.log(v);
+    });
+
+// 如果写错了名字或者zk/本地没配 会error 
+// 配在 config/xx/settings.json 中 remote 远程 local 读本地代码
+```
+
+好了 ZK的迁移先这样，当然我们还有许多的 TODO: 没有做，后续再改
+
+### 迁移 CoreMysql Log
+
+所有的内容都不应该作为黑盒子，而是应该交给外部使用，所以我没必要对这个东西进行封装
+
+
+### 迁移 CoreRedis Log
+
+### 迁移 CoreCache Log
+
+### 迁移 Core统一Error Res Log
+
+
+### V2.0
+> 把剩下的TODO做完

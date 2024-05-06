@@ -1,0 +1,26 @@
+{
+  "rootNode": "Service_resource",
+  "hostname": "localhost:2181",
+  "configs": [
+    {
+      "node":"Database",
+      "type": "local",
+      "value": "/Database.json"
+    },
+    {
+      "node":"AuthInfo",
+      "type": "remote",
+      "value": "/AuthInfo.json"
+    },
+    {
+      "node":"RedisConfig",
+      "type": "local",
+      "value": "/RedisConfig.json"
+    },
+    {
+      "node":"RESTAPI",
+      "type": "local",
+      "value": "/RESTAPI.json"
+    }
+  ]
+}
