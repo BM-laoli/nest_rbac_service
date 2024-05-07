@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectEntityManager } from '@nestjs/typeorm';
 import { DataSource, EntityManager } from 'typeorm';
-import { App } from './entities/sys_iam/app.entity';
+import { App } from '../entities/sys_iam/app.entity';
 import { ZKService } from '@app/core/modules';
 import { RedisService } from '@app/core/modules/redis/redis.service';
 import { CacheService } from '@app/core/modules/cache/cache.service';

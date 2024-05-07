@@ -1,6 +1,6 @@
 import { Logger, Module } from '@nestjs/common';
-import { ResourceServiceController } from './resource-service.controller';
-import { ResourceServiceService } from './resource-service.service';
+import { ResourceServiceController } from './controller/resource-service.controller';
+import { ResourceServiceService } from './service/resource-service.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { config } from './config';
 import { ZKModule, ZKService } from '@app/core/modules';
@@ -14,6 +14,8 @@ import { RedisService } from '@app/core/modules/redis/redis.service';
 import { CacheModule } from '@app/core/modules/cache/cache.module';
 import { CacheService } from '@app/core/modules/cache/cache.service';
 import { LogModule } from '@app/core/modules/log/log.module';
+import { AppService } from './service/app.service';
+import AppController from './controller/app.controller';
 
 @Module({
   imports: [
@@ -100,7 +102,8 @@ import { LogModule } from '@app/core/modules/log/log.module';
             prettyPrint: true,
           },
           dailyRotateFile: {
-            filename: resolve(  // @TODO: 这个地方总是有一些问题
+            filename: resolve(
+              // @TODO: 这个地方总是有一些问题
               __dirname,
               './apps/resource-service/logs',
               'application-%DATE%.log',
@@ -115,7 +118,7 @@ import { LogModule } from '@app/core/modules/log/log.module';
       inject: [ZKService],
     }),
   ],
-  controllers: [ResourceServiceController],
-  providers: [ResourceServiceService, RedisService, CacheService],
+  controllers: [ResourceServiceController, AppController],
+  providers: [ResourceServiceService, RedisService, CacheService, AppService],
 })
 export class ResourceServiceModule {}

@@ -259,7 +259,10 @@ export class LogModule extends WinstonModule {
 
 ### 重点！ typeOrm的 Res 统一和验证 - swagger 迁移 Log
 
+这里的重点是 对 UseInterceptors 的理解和运用，如果它用在 controller 上 那么在 数据出去的时候 会经过它 被转化。比如 classSerializerMysql.interceptor 和 httpReq.interceptor。详情见 文章：https://juejin.cn/post/7231870422391930940?searchId=20240507174121BC6C8AF138566897516B （序列化）
+
 ### 迁移 CoreAuth 模块 Log
+
 
 
 @TODO: 收敛所有的 /lib/core 导出

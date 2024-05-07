@@ -1,5 +1,5 @@
 import { Controller, Get, Inject, LoggerService } from '@nestjs/common';
-import { ResourceServiceService } from './resource-service.service';
+import { ResourceServiceService } from '../service/resource-service.service';
 import { ZKService } from '@app/core/modules';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
