@@ -160,12 +160,109 @@ CREATE USER `joney`@`localhost`; 就是错的❌
 在迁移的过程中发现实在是太多的魔法字符串了，需想办法归纳起来！@TODO:
 
 
-### 迁移 CoreRedis Log
+### 迁移 CoreRedis 和 CoreCache Log
 
-### 迁移 CoreCache Log
+比较简单，这里介绍一个 直接覆盖实现又可以进行封装的方法
+
+```ts
+import { DynamicModule, Global, Module } from '@nestjs/common';
+import { CacheService } from './cache.service';
+import { RedisModule, RedisModuleAsyncOptions } from '@liaoliaots/nestjs-redis';
+
+@Global()
+@Module({
+  providers: [CacheService],
+  exports: [CacheService],
+})
+export class CacheModule extends RedisModule {
+  static forRootAsync(
+    options: RedisModuleAsyncOptions,
+    isGlobal = true,
+  ): DynamicModule {
+    return RedisModule.forRootAsync(options, isGlobal);
+  }
+}
+
+```
+
+说一个另外的问题，cache 和 redis 应该分开，redis 是一个产品可以实现高速缓存
+cache 是一个基本能力。nest默认的cache是存内存的，在我的例子中我把他们存到内存中。
+
+如果有需要我们可以把它换到redis中，一般对于企业来说 cache 是存 redis或者 kafaka 的 。但是这里就不这样处理了
+@TODO: 存到另一个redis中做为 cache redis 
+
+虽然nest提供的 cache module 可以直接用，但是我们企业运用实践中我们一般都会
+自己额外封装一次
+
+**下面的三个东西 应该和在一起讲 ！注意了有很强的关联性**
+
+### 迁移 CoreLog 模块 Log
+这个东西需要内敛到 core中 把需要配置的地方暴露出来就好了
+
+涉及主题：如何二次封装 动态模块？
+```ts
+// 像这样使用
+ LogModule.forRootAsync({
+      useFactory: async (zkService: ZKService) => {
+        // 这只是一个预留位置 无实际作用
+        // const value = await zkService.getConfig('Database');
+        // console.log(resolve(
+        //   __dirname,
+        //   '../../logs',
+        //   'application-%DATE%.log',
+        // ));
+        return {
+          xxx
+          },
+        };
+      },
+      inject: [ZKService],
+
+// 封装方法 📦
+
+@Module({})
+export class LogModule extends WinstonModule {
+  static forRootAsync(options: WinstonModuleAsyncOptions & any): DynamicModule {
+    return WinstonModule.forRootAsync({
+      useFactory: async (parmas: any) => {
+        const config = await options.useFactory(parmas);
+        const { console = {}, dailyRotateFile = {} } = config;
+        return {
+          transports: [
+            new winston.transports.Console({
+              format: winston.format.combine(
+                winston.format.timestamp(),
+                winston.format.ms(),
+                nestWinstonModuleUtilities.format.nestLike(console.systemName, {
+                  colors: console.colors,
+                  prettyPrint: console.prettyPrint,
+                }),
+              ),
+            }),
+            new DailyRotateFile({
+              ...dailyRotateFile,
+            }),
+          ],
+        };
+      },
+      inject: [...options.inject],
+    });
+  }
+}
+
+```
+
 
 ### 迁移 Core统一Error Res Log
 
+下面的内容主要用到了 UseInterceptors Filter 和 自定义  decorators exception 这四种东西，相关的文章王已经发布说明过，这里不详细赘述了。
+
+### 重点！ typeOrm的 Res 统一和验证 - swagger 迁移 Log
+
+### 迁移 CoreAuth 模块 Log
+
+
+@TODO: 收敛所有的 /lib/core 导出
 
 ### V2.0
-> 把剩下的TODO做完
+> 把 V1.0 剩下的TODO:做完

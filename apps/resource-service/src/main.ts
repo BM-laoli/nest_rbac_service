@@ -1,11 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { ResourceServiceModule } from './resource-service.module';
-// import { config } from './config';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(ResourceServiceModule);
   app.setGlobalPrefix('/api/resource');
-  // console.log(config('resource-service'));
-  await app.listen(3000);
+  const config = app.get(ConfigService);
+
+  await app.listen(config.get('PROT'));
 }
 bootstrap();

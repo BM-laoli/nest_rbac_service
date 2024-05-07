@@ -47,4 +47,4 @@ type Config = {
   };
 };
 
-export { Config, ConfigDBMYSQL, ConfigDBType };
+export { Config, ConfigDBMYSQL, ConfigDBType, RedisConfig };

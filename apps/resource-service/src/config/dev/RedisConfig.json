@@ -1,7 +1,7 @@
 {
   "host": "localhost",
-  "password": "localhost",
-  "db": 1,
+  "password": "",
+  "db": 0,
   "port": 6379,
-  "family": 6379
+  "family": 4
 }
