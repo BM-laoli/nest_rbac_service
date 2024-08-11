@@ -257,15 +257,36 @@ export class LogModule extends WinstonModule {
 
 下面的内容主要用到了 UseInterceptors Filter 和 自定义  decorators exception 这四种东西，相关的文章王已经发布说明过，这里不详细赘述了。
 
-### 重点！ typeOrm的 Res 统一和验证 - swagger 迁移 Log
+### 迁移 迁移 重点！ typeOrm 的 Res 统一和验证 - swagger 迁移 Log
 
 这里的重点是 对 UseInterceptors 的理解和运用，如果它用在 controller 上 那么在 数据出去的时候 会经过它 被转化。比如 classSerializerMysql.interceptor 和 httpReq.interceptor。详情见 文章：https://juejin.cn/post/7231870422391930940?searchId=20240507174121BC6C8AF138566897516B （序列化）
 
 ### 迁移 CoreAuth 模块 Log
+1. 梳理一下原来的功能
+
+  我们原来的功能上基于 token 做的认证，同时还具备了 单点登录的功能。涉及到的东西有
+
+  - auth.controller / service / module 一套
+  - authUser.service 一个
+  - jwt.strategy 一个
+  - NotAuthGuard 一个
+  
+  **注意这个 passport 验证是一个黑盒 对齐内部的运行不可知 所以要各位注意参数配置**
+
+2. 确认一下迁移
+
+ 由于单点功能的实现依赖 redis 所以要使用 CoreAuth 得把 redis 一起注册到Application 上。 同时还需要注意 swager 如何配合这个 auth 验证
+
+3. 后续如何做优化？
+
+  @TODO:
+  - 偶合性有点高 比如依赖 redis 依赖 mysql 和 MysqlEntityClass 
+  - 扩展性不高 固定性写死的 login 等
 
 
-
+### 收敛所有的 lib/core
 @TODO: 收敛所有的 /lib/core 导出
 
-### V2.0
+# V2.0
 > 把 V1.0 剩下的TODO:做完
+

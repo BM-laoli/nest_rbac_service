@@ -8,4 +8,9 @@ type Setting = {
   }>;
 };
 
-export { Setting };
+type AuthInfo = {
+  secret: string;
+  expiresIn: string;
+};
+
+export { Setting, AuthInfo };

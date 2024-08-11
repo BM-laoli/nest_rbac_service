@@ -1,16 +1,12 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   HttpException,
   HttpStatus,
   Inject,
   LoggerService,
-  ParseArrayPipe,
-  ParseIntPipe,
   Post,
-  Put,
   Query,
   Scope,
   SerializeOptions,
@@ -76,6 +72,7 @@ export default class AppController {
   }
 
   @Get('/all')
+  // @NotAuth()
   @MysqlEntityClass(AppListResDTO) // 这两个要求是相互关联的1
   @ApiPaginatedResponse(AppResDTO) // 这两个要求是相互关联的2
   // 这个值必选传 但是我们把 -1 当做不存在的查询条件
@@ -87,35 +84,4 @@ export default class AppController {
       this.throwError('查询失败', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-
-  // @Put('/update')
-  // @MysqlEntityClass(MenuResDTO)
-  // @ApiResponse({ type: MenuResDTO })
-  // updateACB(@Body() menuInfo: MenuCreateReqDTO) {
-  //   try {
-  //     return this.menuService.updateACB(menuInfo);
-  //   } catch (error) {
-  //     this.logger.error(JSON.stringify(error));
-  //     this.throwError('更新失败', HttpStatus.INTERNAL_SERVER_ERROR);
-  //   }
-  // }
-
-  // @Delete('/delete')
-  // deleteACB(
-  //   @Query(
-  //     'ids',
-  //     new ParseArrayPipe({
-  //       items: Number,
-  //       separator: ',',
-  //     }),
-  //   )
-  //   ids: number[],
-  // ) {
-  //   try {
-  //     return this.menuService.deleteACB(ids);
-  //   } catch (error) {
-  //     this.logger.error(JSON.stringify(error));
-  //     this.throwError('删除失败', HttpStatus.INTERNAL_SERVER_ERROR);
-  //   }
-  // }
 }

@@ -1,4 +1,4 @@
 {
   "secret": "ABCSSSDES#$%^&**(&^^%",
-  "expiresIn": "1000"
+  "expiresIn": "120s"
 }

@@ -14,8 +14,12 @@ import { RedisService } from '@app/core/modules/redis/redis.service';
 import { CacheModule } from '@app/core/modules/cache/cache.module';
 import { CacheService } from '@app/core/modules/cache/cache.service';
 import { LogModule } from '@app/core/modules/log/log.module';
-import { AppService } from './service/app.service';
 import AppController from './controller/app.controller';
+import { AuthModule } from '@app/core/modules/auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { UserInfo } from '@app/core/dto/responseBase.dto';
+import { NotAuthGuard } from '@app/core/modules/auth/NotAuthGuard.guard';
+import { AppService } from './service/app.service';
 
 @Module({
   imports: [
@@ -56,6 +60,8 @@ import AppController from './controller/app.controller';
               __dirname,
               `./entities/${config.name}/**/*.entity{.ts,.js}`,
             ),
+            // @TODO: 待优化
+            UserInfo,
           ], // 扫描本项目中.entity.ts或者.entity.js的文件
           synchronize: config.synchronize,
         };
@@ -117,8 +123,18 @@ import AppController from './controller/app.controller';
       },
       inject: [ZKService],
     }),
+    AuthModule,
   ],
   controllers: [ResourceServiceController, AppController],
-  providers: [ResourceServiceService, RedisService, CacheService, AppService],
+  providers: [
+    ResourceServiceService,
+    RedisService,
+    CacheService,
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: NotAuthGuard,
+    },
+  ],
 })
 export class ResourceServiceModule {}

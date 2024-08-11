@@ -2,6 +2,7 @@ import { Controller, Get, Inject, LoggerService } from '@nestjs/common';
 import { ResourceServiceService } from '../service/resource-service.service';
 import { ZKService } from '@app/core/modules';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { Public } from '@app/core/decorators/public.decorator';
 
 @Controller()
 export class ResourceServiceController {
@@ -20,7 +21,9 @@ export class ResourceServiceController {
   }
 
   @Get()
+  @Public()
   getHello() {
-    return this.resourceServiceService.getHello();
+    return 'hello';
+    // return this.resourceServiceService.getHello();
   }
 }

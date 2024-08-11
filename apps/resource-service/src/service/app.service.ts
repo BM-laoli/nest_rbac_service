@@ -40,8 +40,4 @@ export class AppService {
     );
     return res;
   }
-
-  // async updateACB(menuInfo: MenuCreateReqDTO) {}
-
-  // async deleteACB(ids: number[]) {}
 }
