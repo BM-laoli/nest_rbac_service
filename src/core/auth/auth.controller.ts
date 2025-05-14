@@ -6,14 +6,16 @@ import {
   SerializeOptions,
   UseInterceptors,
 } from '@nestjs/common';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+
 import { AuthService } from './auth.service';
 import { NotAuth } from '../decorators/notAuth.decorator';
 import { MysqlEntityClass } from '../decorators/mysqlEntityClass.decorator';
 import { ClassSerializerMysqlInterceptor } from '../interceptor/classSerializerMysql.interceptor';
 import AuthUserService from './authUser.service';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthInfoResDTO } from 'src/dto/response/responseBase.dto';
 import { AuthLoginReqDTO, UserInfoReqDTO } from 'src/dto/request/rbac.dto';
+
 @Controller({
   path: '/auth',
   scope: Scope.REQUEST,

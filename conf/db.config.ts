@@ -1,27 +1,14 @@
 const MysqlDBConfig: ConfigType['database'] = {
   mysql: [
     {
-      name: 'rbac_db',
-      // host: '192.168.101.2',
-      host: '192.168.0.106',
-      // host: 'localhost',
+      name: 'der_w_calorie',
+      host: '127.0.0.1',
       port: 3306,
       username: 'root',
       password: '123456',
-      database: 'rbac_db',
+      database: 'der_w_calorie',
       synchronize: true,
-    },
-    {
-      name: 'rbac_db_1',
-      // host: '192.168.101.2',
-      host: '192.168.0.106',
-      // host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '123456',
-      database: 'rbac_db_1',
-      synchronize: true,
-    },
+    }
   ],
 };
 

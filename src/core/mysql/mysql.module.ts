@@ -1,11 +1,9 @@
 import { Module, DynamicModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConnectionOptions } from 'typeorm';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { MysqlModuleAsyncOptions } from '../types/mysql.type';
-import { MYSQL_MODULE_OPTIONS } from '../constans/mysql';
-import { ZKService } from '../zk/zk.service';
 import { resolve } from 'path';
+import { MysqlModuleAsyncOptions } from '../types/mysql.type';
+import { ZKService } from '../zk/zk.service';
 
 @Module({})
 export class MysqlModule {
@@ -20,7 +18,11 @@ export class MysqlModule {
             Array<ConfigDBMYSQLType>
           >('/RBAC_Service/database/mysql');
 
-          const DBConfig = DBConfigAll.find((item) => item.name === db);
+          const DBConfig = DBConfigAll
+            .filter(item => !item.name.startsWith('_')) // 过滤掉以下划线开头的数据库
+            .find((item) => item.name === db);
+          // 排除掉 
+          
           const options: ConnectionOptions = {
             type: 'mysql',
             name: DBConfig.name,
@@ -35,7 +37,7 @@ export class MysqlModule {
                 `../../entities/${DBConfig.name}/**/*.entity{.ts,.js}`,
               ),
             ], // 扫描本项目中.entity.ts或者.entity.js的文件
-            synchronize: true,
+            synchronize: false,
           };
           return options;
         },

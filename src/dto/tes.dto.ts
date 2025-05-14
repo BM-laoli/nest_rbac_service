@@ -1,10 +1,10 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { Exclude, Expose } from 'class-transformer';
 import { IsEmail, IsNotEmpty } from 'class-validator';
-import { RoleInfo } from 'src/entities/rbac_db/role-info.entity';
-import { UserInfo } from 'src/entities/rbac_db/user-info.entity';
-import { UserRole } from 'src/entities/rbac_db/user-role.entity';
-import { User_db2 } from 'src/entities/rbac_db_1/te2.entity';
+import { RoleInfo } from 'src/entities/_rbac_db/role-info.entity';
+import { UserInfo } from 'src/entities/_rbac_db/user-info.entity';
+import { UserRole } from 'src/entities/_rbac_db/user-role.entity';
+import { User_db2 } from 'src/entities/_rbac_db_1/te2.entity';
 
 // 应对 无id 是创建 有id是修改的逻辑
 class PartialId {
@@ -62,3 +62,4 @@ export class VOUserInfo extends UserInfo {
     Object.assign(this, partial);
   }
 }
+

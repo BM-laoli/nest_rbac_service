@@ -9,7 +9,7 @@ import {
   TreeChildren,
   TreeParent,
 } from 'typeorm';
-import { Base } from '../rbac_db/base';
+import { Base } from '../_rbac_db/base';
 import { PermissionMenu } from './permission-menu.entity';
 
 @Entity()

@@ -1,0 +1,37 @@
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { Base } from './base';
+
+
+@Entity()
+export class UserInfo extends Base {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({
+    unique: true,
+  })
+  username: string;
+
+  @Column()
+  email: string;
+
+  @Column()
+  password: string;
+
+  @Column({
+    type: 'int',
+    default: 1,
+    comment: '1 禁用 2 启用',
+  })
+  state: number;
+}

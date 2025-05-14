@@ -8,14 +8,13 @@ export const InitConfig = () => ({
   mysqlDBS: process.env.MYSQL_DBS.split(',').map((i) => i.trim()),
 });
 
+// 注意这里 是本地开发的时候配置 
 export const config: RBAC_Service = {
   RBAC_Service: {
     database: db,
     RESTAPI: RESTAPI,
     RedisConfig: {
-      // host: '192.168.101.2',
-      host: '192.168.0.106',
-      // host: 'localhost',
+      host: '127.0.0.1',
       port: 6379,
       db: 0,
       family: 4,

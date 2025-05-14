@@ -1,15 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose, Type } from 'class-transformer';
-import { ActionButton } from 'src/entities/rbac_db/action-button.entity';
-import { Menu } from 'src/entities/rbac_db/menu.entity';
-import { PermissionAB } from 'src/entities/rbac_db/permission-ab.entity';
-import { PermissionMenu } from 'src/entities/rbac_db/permission-menu.entity';
-import { RoleInfo } from 'src/entities/rbac_db/role-info.entity';
-import { RolePermission } from 'src/entities/rbac_db/role-permission.entity';
-import { UserInfo } from 'src/entities/rbac_db/user-info.entity';
-import { UserRole } from 'src/entities/rbac_db/user-role.entity';
+import { ActionButton } from 'src/entities/_rbac_db/action-button.entity';
+import { Menu } from 'src/entities/_rbac_db/menu.entity';
+import { PermissionAB } from 'src/entities/_rbac_db/permission-ab.entity';
+import { PermissionMenu } from 'src/entities/_rbac_db/permission-menu.entity';
+import { RoleInfo } from 'src/entities/_rbac_db/role-info.entity';
+import { RolePermission } from 'src/entities/_rbac_db/role-permission.entity';
+import { UserInfo } from 'src/entities/_rbac_db/user-info.entity';
+import { UserRole } from 'src/entities/_rbac_db/user-role.entity';
 import { PagenationResDTO } from './responseBase.dto';
-import { Permission } from 'src/entities/rbac_db/permission.entity';
+import { Permission } from 'src/entities/_rbac_db/permission.entity';
 
 class ActionButtonResDTO implements ActionButton {
   @ApiProperty()

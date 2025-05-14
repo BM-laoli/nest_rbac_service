@@ -6,15 +6,15 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { PartialIdDTO } from '../base.dto';
-import { UserInfo } from 'src/entities/rbac_db/user-info.entity';
-import { UserRole } from 'src/entities/rbac_db/user-role.entity';
-import { RoleInfo } from 'src/entities/rbac_db/role-info.entity';
-import { RolePermission } from 'src/entities/rbac_db/role-permission.entity';
-import { ActionButton } from 'src/entities/rbac_db/action-button.entity';
-import { PermissionAB } from 'src/entities/rbac_db/permission-ab.entity';
-import { Menu } from 'src/entities/rbac_db/menu.entity';
-import { PermissionMenu } from 'src/entities/rbac_db/permission-menu.entity';
-import { Permission } from 'src/entities/rbac_db/permission.entity';
+import { UserInfo } from 'src/entities/_rbac_db/user-info.entity';
+import { UserRole } from 'src/entities/_rbac_db/user-role.entity';
+import { RoleInfo } from 'src/entities/_rbac_db/role-info.entity';
+import { RolePermission } from 'src/entities/_rbac_db/role-permission.entity';
+import { ActionButton } from 'src/entities/_rbac_db/action-button.entity';
+import { PermissionAB } from 'src/entities/_rbac_db/permission-ab.entity';
+import { Menu } from 'src/entities/_rbac_db/menu.entity';
+import { PermissionMenu } from 'src/entities/_rbac_db/permission-menu.entity';
+import { Permission } from 'src/entities/_rbac_db/permission.entity';
 
 // 注意 class UserInfoReqDTO extends   在swager
 // 不能正确 使用 PartialType，但是直接extends PartialId 可以
